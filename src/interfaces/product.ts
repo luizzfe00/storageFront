@@ -1,4 +1,4 @@
-import UtilsFunctions from '../../utils';
+import UtilsFunctions from '../utils';
 
 const MINIMUM_VALUE = 0;
 
@@ -20,3 +20,33 @@ export const monetaryValidation = (value: string, currency: string): string =>
         currency ?? 'R$'
       }${UtilsFunctions.formatCurrency(MINIMUM_VALUE, true)}`
     : '';
+
+export interface ProductForm {
+  code: string;
+  name: string;
+  qtd: number;
+  image: string;
+  active: boolean;
+  monetary: ValidatedData;
+  previewer?: string;
+}
+
+export const initialState: ProductForm = {
+  code: '',
+  name: '',
+  qtd: 0,
+  active: false,
+  image: '',
+  monetary: initialMonetary,
+  previewer: '',
+};
+
+export interface ImageInterface {
+  url: string;
+  file?: File;
+}
+
+export const initialImage: ImageInterface = {
+  url: '',
+  file: undefined,
+};

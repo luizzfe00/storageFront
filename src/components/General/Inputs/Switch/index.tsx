@@ -67,8 +67,6 @@ const Switch: React.FC<SwitchInterface> = ({
     }
   };
 
-  console.log({ height, width });
-
   return (
     <Container
       onClick={handleChange}

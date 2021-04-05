@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import BasePage from '../../components/General/BasePage';
 import ProductsTable from '../../components/Product/ProductsTable';
-import { ValidatedData, initialMonetary, monetaryValidation } from './auxiliar';
+import {
+  ValidatedData,
+  initialMonetary,
+  monetaryValidation,
+} from '../../interfaces/product';
+
+type Props = RouteComponentProps<{ id: string }>;
 
 export interface Image {
   url: string;
@@ -10,7 +17,8 @@ export interface Image {
 
 const MONETARY_CURRENCY = 'R$';
 
-const Product: React.FC = () => {
+const Product: React.FC<Props> = ({ match }: Props) => {
+  const { id } = match.params;
   const [query, setQuery] = useState('');
   const [image, setImage] = useState<Image>({
     url: '',
@@ -32,6 +40,7 @@ const Product: React.FC = () => {
     <BasePage>
       <ProductsTable
         name="query"
+        id={id}
         query={query}
         image={image}
         setImage={setImage}

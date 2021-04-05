@@ -1,9 +1,9 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { useState, Dispatch, SetStateAction } from 'react';
 
 import { icons } from '../../../assets/icons';
+import { ValidatedData } from '../../../interfaces/product';
 import { Image } from '../../../pages/Product';
-import { ValidatedData } from '../../../pages/Product/auxiliar';
-import api from '../../../services/api';
+import { api, useFetch } from '../../../services';
 import { colors } from '../../../styles/colors';
 import Button from '../../General/Button';
 import Input from '../../General/Inputs/Input';
@@ -20,6 +20,8 @@ interface ProductFormProps {
   monetary: ValidatedData;
   setValue: Dispatch<SetStateAction<ValidatedData>>;
 
+  id: string;
+
   query: string;
   name: string;
   image: Image;
@@ -34,6 +36,7 @@ const ProductsTable: React.FC<ProductFormProps> = ({
   name,
   setValue,
   query,
+  id,
   monetary,
   onChange,
   image,
@@ -41,43 +44,21 @@ const ProductsTable: React.FC<ProductFormProps> = ({
   children,
   ...props
 }) => {
-  const fetchedData = [
-    {
-      _id: 'meuId',
-      code: '213213214asdsadvas123',
-      name: 'Teste',
-      active: true,
-      qtd: 45,
-      monetary: {
-        value: '70,00',
-        invalidity: '',
-        validation: (): string => '',
-      },
-    },
-    {
-      id: 'meuId2',
-      code: '1232131adsad',
-      name: 'Sapato',
-      active: false,
-      qtd: 105,
-      monetary: {
-        value: '470,00',
-        invalidity: '',
-        validation: (): string => '',
-      },
-    },
-  ];
+  const [showModal, setShowModal] = useState(false);
+  const [product, setProduct] = useState();
 
-  const data = [
-    {
-      id: '213213214asdsadvas123',
-      name: 'Teste',
-      value: 'R$ 70,00',
-      qtd: 45,
+  const { data: products } = useFetch('/product');
+
+  const data =
+    products?.data?.items?.map((item: any) => ({
+      code: item.code,
+      name: item.name,
+      value: item.value,
+      quantity: item.quantity,
       active: (
         <Switch
           name="active"
-          value={true}
+          value={item.active}
           leftText="Não"
           rightText="Sim"
           height={26}
@@ -85,28 +66,10 @@ const ProductsTable: React.FC<ProductFormProps> = ({
           fontSize={15}
         />
       ),
-    },
-    {
-      id: '1232131adsad',
-      name: 'Sapato',
-      value: 'R$ 470,00',
-      qtd: 105,
-      active: (
-        <Switch
-          name="active"
-          value={false}
-          leftText="Não"
-          rightText="Sim"
-          height={26}
-          width={40}
-          fontSize={15}
-        />
-      ),
-    },
-  ];
+    })) ?? [];
 
   const header = [
-    { name: 'ID' },
+    { name: 'Código' },
     { name: 'Nome', isInput: true, alignCenter: true, fitContent: true },
     { name: 'Valor', alignCenter: true, fitContent: true },
     { name: 'Quantidade', alignCenter: true, fitContent: true },
@@ -118,21 +81,17 @@ const ProductsTable: React.FC<ProductFormProps> = ({
       title: 'Editar',
       icon: icons.pencil,
       color: colors.primary,
-      onClick: (event?: React.MouseEvent<HTMLButtonElement>) => {
+      onClick: async (event?: React.MouseEvent<HTMLButtonElement>) => {
         event?.preventDefault();
 
         const productID = String(event?.currentTarget.value);
 
-        const product = fetchedData.filter(
-          (product) => product.code === productID,
+        const product = products.data.items.filter(
+          (product: any) => product.code === productID,
         )[0];
 
-        const content = {
-          title: 'Adicionar Produto',
-          content: <ProductForm data={product} />,
-          confirmText: 'Adicionar',
-        };
-        confirmModal(content);
+        setProduct(product);
+        setShowModal(true);
       },
     },
     {
@@ -144,8 +103,8 @@ const ProductsTable: React.FC<ProductFormProps> = ({
 
         const productID = String(event?.currentTarget.value);
 
-        const productName = data.filter(
-          (product) => product.id === productID,
+        const productName = products.data.items.filter(
+          (product: any) => product.id === productID,
         )[0].name;
 
         const content = {
@@ -162,7 +121,7 @@ const ProductsTable: React.FC<ProductFormProps> = ({
         confirmModal(content).then(async (confirmation) => {
           if (confirmation) {
             try {
-              // await api.delete(`/product/${productID}`);
+              await api.delete(`/product/${productID}`);
             } catch (err) {
               console.log(err);
             }
@@ -171,15 +130,6 @@ const ProductsTable: React.FC<ProductFormProps> = ({
       },
     },
   ];
-
-  const handleAddClick = () => {
-    const content = {
-      title: 'Adicionar Produto',
-      content: <ProductForm />,
-      confirmText: 'Adicionar',
-    };
-    confirmModal(content);
-  };
 
   return (
     <Container>
@@ -190,7 +140,7 @@ const ProductsTable: React.FC<ProductFormProps> = ({
           paddingRightLeft={60}
           paddingUpDown={10}
           icon={icons.plus}
-          onClick={handleAddClick}
+          onClick={() => setShowModal(true)}
         />
         <Input
           width="30rem"
@@ -207,6 +157,13 @@ const ProductsTable: React.FC<ProductFormProps> = ({
       </header>
       <main>
         <h1>Produtos</h1>
+        {showModal && (
+          <ProductForm
+            id={id}
+            product={product}
+            onHide={() => setShowModal(false)}
+          />
+        )}
         <Table data={data} header={header} actions={actions} />
       </main>
     </Container>

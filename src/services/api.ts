@@ -12,7 +12,7 @@ import store from '../redux/store';
 
 const EXPIRED_AUTH_MESSAGES = ['Sua Sessão Expirou.'];
 
-const api = axios.create({ baseURL: config.apiURL });
+const api = axios.create({ baseURL: `${config.apiURL}/api/v1` });
 
 const requestHandler = (request: AxiosRequestConfig) => {
   const savedToken = localStorage.getItem('@Vendor:token');
