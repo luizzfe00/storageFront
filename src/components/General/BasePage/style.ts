@@ -4,7 +4,7 @@ import { colors } from '../../../styles/colors';
 export const Container = styled.div`
   background: ${colors.background};
   font-family: 'Accord Alternate';
-  padding: 10px 40px 40px 40px;
+  padding: 0 40px;
   min-height: 100vh;
   position: relative;
 

@@ -1,28 +1,59 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
-const path = require('path')
+const {app, BrowserWindow, Menu, ipcRenderer} = require('electron')
+const path = require('path');
+
+const dockMenu = Menu.buildFromTemplate([
+  {
+    label: 'Login',
+    accelerator: "CmdOrCtrl+",
+    click: () => {
+      ipcRenderer.send('toggle-auth');
+    }
+  }
+]);
 
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
+    backgroundColor: '#F2F3F7',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
   })
 
+  const authWindow = new BrowserWindow({
+    width: 1920,
+    height: 1080,
+    parent: mainWindow,
+    modal: true,
+    show: false,
+  })
+
   // and load the index.html of the app.
-  mainWindow.loadURL('http://localhost:3000')
+  mainWindow.loadURL('http://localhost:3000/:id')
+  authWindow.loadURL('http://localhost:3000/auth')
+
+  authWindow.once('ready-to-show', () => {
+    authWindow.show();
+  })
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+
+  authWindow.on('close', (e) => {
+    e.preventDefault();
+    authWindow.hide();
+  });
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  Menu.setApplicationMenu(dockMenu)
   createWindow()
   
   app.on('activate', function () {

@@ -16,14 +16,22 @@ export interface RouteProps extends ReactDOMRouterProps {
   id?: boolean;
 }
 
-export const privateRouteList: RouteProps[] = [];
+export const privateRouteList: RouteProps[] = [
+  {
+    path: '/products',
+    component: pages.Product,
+    exact: true,
+    title: 'Produtos',
+    navbar: true,
+  },
+];
 
 export const publicRouteList: RouteProps[] = [
   {
-    path: '/',
-    component: pages.Product,
+    path: '/auth',
+    component: pages.Auth,
     exact: true,
-    title: 'Novo Produto',
-    navbar: true,
+    title: 'Início',
+    navbar: false,
   },
 ];

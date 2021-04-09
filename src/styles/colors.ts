@@ -41,6 +41,7 @@ export const colors = {
 
   // Shadows and Border
   primaryShadow: '#DEE2F2',
+  containerShadow: 'rgba(15, 15, 15, 0.28)',
   secondaryShadow: '#D4D4DB',
   inputBorder: '#D1D2DA',
   invalidBorder: '#dc3545',

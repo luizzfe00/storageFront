@@ -90,6 +90,8 @@ const ProductsTable: React.FC<ProductFormProps> = ({
           (product: any) => product.code === productID,
         )[0];
 
+        console.log({ product });
+
         setProduct(product);
         setShowModal(true);
       },

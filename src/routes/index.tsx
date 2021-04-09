@@ -22,7 +22,7 @@ const Routes: React.FC = () => {
               {...routeProps}
             />
           ))}
-          <Redirect to="/" />
+          <Redirect to="/products" />
         </Switch>
       ) : (
         <Switch>
@@ -33,7 +33,7 @@ const Routes: React.FC = () => {
               {...routeProps}
             />
           ))}
-          <Redirect to="/" />
+          <Redirect to="/auth" />
         </Switch>
       )}
     </BrowserRouter>
