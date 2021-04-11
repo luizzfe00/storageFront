@@ -9,7 +9,6 @@ const reducer = (state = initialState, action: Actions) => {
   switch (action.type) {
     case LOGIN:
       localStorage.setItem('@Vendor:token', action.token);
-      localStorage.setItem('@Vendor:user', JSON.stringify(action.user));
 
       return {
         ...state,

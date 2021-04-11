@@ -35,34 +35,28 @@ export const BackDrop = styled(motion.div)`
   transform: rotate(60deg);
   top: -290px;
   left: -70px;
-  background: rgb(0, 212, 255);
+  background: rgb(71, 119, 207);
   background: linear-gradient(
     90deg,
-    rgba(0, 212, 255, 1) 56%,
-    rgba(71, 71, 207, 1) 100%,
+    rgba(71, 119, 207, 1) 30%,
+    rgba(0, 212, 255, 1) 100%,
     rgba(2, 0, 36, 1) 100%
   );
 `;
 
 export const backdropVariants = {
   expanded: {
-    width: '233%',
-    height: '1050px',
-    borderRadius: '20%',
-    transform: 'rotate(60deg)',
+    width: '125%',
+    height: '950px',
+    borderRadius: '40%',
+    transform: 'rotate(80deg)',
   },
   collapsed: {
-    width: '145%',
-    height: '600px',
+    width: '105%',
+    height: '850px',
     borderRadius: '50%',
-    transform: 'rotate(60deg)',
+    transform: 'rotate(75deg)',
   },
-};
-
-export const expandingTransition = {
-  type: 'spring',
-  duration: 2.3,
-  stiffness: 30,
 };
 
 export const HeaderContainer = styled.div`
@@ -92,6 +86,6 @@ export const InnerContainer = styled.div`
   width: auto;
   display: flex;
   flex-direction: column;
-  padding: 0 1.8em;
+  padding: 2em 1.8em;
   z-index: 10;
 `;

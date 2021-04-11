@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useState, FormEvent, useContext } from 'react';
 
+import { useDispatch } from 'react-redux';
+
+import { login } from '../../redux/Login/actions';
+import { api } from '../../services/index';
 import Input from '../General/Inputs/Input';
+import { AuthContext } from './authContext';
 
 import {
   BoxContainer,
@@ -10,18 +15,66 @@ import {
   SubmitButton,
 } from './styles';
 
+interface LoginResponse {
+  token: string;
+}
+
+const initialData = {
+  email: '',
+  password: '',
+};
+
 const Login: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const { switchToSignup } = useContext(AuthContext);
+
+  const [data, setData] = useState(initialData);
+
+  const handleField = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setData({ ...data, [name]: value });
+  };
+
+  const handleLogin = async (event: FormEvent) => {
+    event.preventDefault();
+
+    const response: LoginResponse = await api.post('/auth/signin', data);
+
+    const { token } = response;
+
+    dispatch(login(token));
+  };
+
   return (
     <BoxContainer>
-      <FormContainer>
-        <Input block type="email" placeholder="Email" />
-        <Input block type="password" placeholder="Senha" />
+      <FormContainer onSubmit={handleLogin}>
+        <Input
+          block
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleField}
+          value={data.email}
+        />
+        <Input
+          block
+          type="password"
+          name="password"
+          placeholder="Senha"
+          onChange={handleField}
+          value={data.password}
+        />
+        <MutedLink href="#">Esqueceu sua senha?</MutedLink>
+        <SubmitButton type="submit">Login</SubmitButton>
+        <MutedLink href="#">
+          Não tem uma conta?{' '}
+          <BoldLink href="#" onClick={switchToSignup}>
+            Registre-se
+          </BoldLink>
+        </MutedLink>
       </FormContainer>
-      <MutedLink href="#">Esqueceu sua senha?</MutedLink>
-      <SubmitButton type="submit">Login</SubmitButton>
-      <MutedLink href="#">
-        Não tem uma conta? <BoldLink href="#">Registre-se</BoldLink>
-      </MutedLink>
     </BoxContainer>
   );
 };
