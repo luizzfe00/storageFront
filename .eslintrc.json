@@ -58,7 +58,7 @@
     ],
     "no-underscore-dangle": "off",
     "@typescript-eslint/camelcase": "off",
-    "prettier/prettier": "error",
+    "prettier/prettier": "warn",
     "import-helpers/order-imports": [
       "warn",
       {

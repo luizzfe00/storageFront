@@ -44,6 +44,8 @@ const Login: React.FC = () => {
 
     const { token } = response;
 
+    console.log(token);
+
     dispatch(login(token));
   };
 

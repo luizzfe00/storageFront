@@ -17,7 +17,7 @@ const api = axios.create({ baseURL: `${config.apiURL}/api/v1` });
 const requestHandler = (request: AxiosRequestConfig) => {
   const savedToken = localStorage.getItem('@Vendor:token');
   if (savedToken) {
-    const token = `Bearer ${savedToken}`;
+    const token = `auth-token ${savedToken}`;
     request.headers.Authorization = token;
   }
 
@@ -28,9 +28,11 @@ api.interceptors.request.use((request) => requestHandler(request));
 
 api.interceptors.request.use(
   (response) => {
+    console.log('aqui');
     return response;
   },
   (error) => {
+    console.log(error);
     if (error.response) {
       if (
         (error.response.status === 401 &&
