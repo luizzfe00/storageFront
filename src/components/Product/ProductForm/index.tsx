@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { icons } from '../../../assets/icons';
-import { ImageInterface, initialImage } from '../../../interfaces/product';
+import filesize from 'filesize';
+import { uniqueId } from 'lodash';
+import React, { useState, useEffect } from 'react';
+
+import { mutate, cache } from 'swr';
+import { Image } from '../../../interfaces/product';
 import {
   ProductForm as ProductInterface,
   initialState,
 } from '../../../interfaces/product';
+
 import { api } from '../../../services';
 import { colors } from '../../../styles/colors';
 import Backdrop from '../../General/Backdrop';
 import Button from '../../General/Button';
-import Image from '../../General/Inputs/Image';
+import ImageDropzone from '../../General/Inputs/Image';
+import FileList from '../../General/Inputs/Image/FileList';
 import Input from '../../General/Inputs/Input';
 import MonetaryInput from '../../General/Inputs/Monetary';
 import Switch from '../../General/Inputs/Switch';
@@ -20,33 +25,34 @@ import { Container, ImageInputContentContainer, ModalFooter } from './styles';
 interface ProductFormProp {
   product?: ProductInterface;
   onHide: () => void;
-  id: string;
+  products?: any;
 }
 
-const ProductForm: React.FC<ProductFormProp> = ({ product, onHide, id }) => {
+const ProductForm: React.FC<ProductFormProp> = ({
+  product,
+  onHide,
+  products,
+}) => {
   const [data, setData] = useState<ProductInterface>(product || initialState);
-  const [image, setImage] = useState<ImageInterface>(initialImage);
 
-  const imageInputContent = (
-    <ImageInputContentContainer>
-      {icons.upload}
-
-      <small>Clique/arraste uma imagem até aqui</small>
-    </ImageInputContentContainer>
-  );
+  useEffect(() => {
+    if (data.images.length > 3) {
+      setData({
+        ...data,
+        images: data.images.map((image, id) => {
+          if (id > 2) return { ...image, error: true, uploaded: false };
+          return image;
+        }),
+      });
+    }
+  }, [data.images]);
 
   const handleValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
 
-    const invalidity = data.monetary.validation(value);
-
     setData((prev: any) => ({
       ...prev,
-      monetary: {
-        ...prev.monetary,
-        value: value,
-        invalidity: invalidity,
-      },
+      value,
     }));
   };
 
@@ -55,15 +61,6 @@ const ProductForm: React.FC<ProductFormProp> = ({ product, onHide, id }) => {
       ...prev,
       [name]: value,
     }));
-  };
-
-  const handleImage = (url: string, file?: File) => {
-    setData((prev: any) => ({
-      ...prev,
-      url,
-    }));
-
-    setImage({ url, file });
   };
 
   const handleText = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,16 +88,50 @@ const ProductForm: React.FC<ProductFormProp> = ({ product, onHide, id }) => {
       const body = {
         code: data.code,
         active: data.active,
-        image: image.url,
+        images: {
+          image1: data.images[0],
+          image2: data.images[1],
+          image3: data.images[2],
+        },
         name: data.name,
-        quantity: data.qtd,
-        value: data.monetary.value,
+        quantity: data.quantity,
+        value: data.value,
       };
 
-      await api.post(`/product/1`, body);
+      const response = await api.post(`/product`, body);
+
+      mutate('/product', {
+        ...products,
+        items: [...products.items, response.data.product],
+      });
     } catch (err) {
       console.log({ ...err });
     }
+  };
+
+  const onUpload = (files: any) => {
+    const uploadedFiles = files.map((file: Image) => ({
+      file,
+      id: uniqueId(),
+      name: file.name,
+      readableSize: filesize(file.size),
+      uploaded: true,
+      error: false,
+      url: URL.createObjectURL(file),
+    }));
+
+    const newImages = [...data.images, ...uploadedFiles];
+
+    if (newImages.length > 3) return;
+
+    setData({
+      ...data,
+      images: newImages,
+    });
+  };
+
+  const deleteImage = (id: string) => {
+    console.log(id);
   };
 
   return (
@@ -153,7 +184,7 @@ const ProductForm: React.FC<ProductFormProp> = ({ product, onHide, id }) => {
             placeholder="0"
             min={0}
             block
-            value={data.qtd}
+            value={data.quantity}
             onChange={handleQuantity}
           />
         </Text.Label>
@@ -162,11 +193,8 @@ const ProductForm: React.FC<ProductFormProp> = ({ product, onHide, id }) => {
           <MonetaryInput
             width="150px"
             name="value"
-            value={data.monetary.value}
+            value={data.value}
             onChange={handleValue}
-            validate
-            validated
-            validation={data.monetary.validation}
           />
         </Text.Label>
 
@@ -187,18 +215,14 @@ const ProductForm: React.FC<ProductFormProp> = ({ product, onHide, id }) => {
           block
           spaceBetween
           gridArea="image"
-          onOnClick
+          OnClick
           text="Selecione a imagem do produto:"
           fontWeight="bold"
         >
-          <Image
-            block
-            short
-            url={image.url}
-            content={imageInputContent}
-            onFileUpload={handleImage}
-            previewer={data.previewer}
-            value={data.image}
+          <ImageDropzone
+            files={data.images}
+            onUpload={onUpload}
+            handleDelete={deleteImage}
           />
         </Text.Label>
 

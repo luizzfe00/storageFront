@@ -16,7 +16,9 @@ import {
 } from './styles';
 
 interface LoginResponse {
-  token: string;
+  data: {
+    token: string;
+  };
 }
 
 const initialData = {
@@ -42,9 +44,7 @@ const Login: React.FC = () => {
 
     const response: LoginResponse = await api.post('/auth/signin', data);
 
-    const { token } = response;
-
-    console.log(token);
+    const { token } = response.data;
 
     dispatch(login(token));
   };

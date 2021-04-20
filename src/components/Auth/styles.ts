@@ -19,13 +19,15 @@ export const FormContainer = styled.form`
   flex-direction: column;
 
   > div {
-    margin-bottom: 0.3em;
+    margin-bottom: 0.6em;
   }
 `;
 
 export const MutedLink = styled.a`
-  font-size: 11px;
-  color: rgba(200, 200, 200, 0.8);
+  text-align: center;
+  margin: 0.5em 0;
+  font-size: 12px;
+  color: ${colors.lightGrayBorder};
   font-weight: 500;
   text-decoration: none;
 `;

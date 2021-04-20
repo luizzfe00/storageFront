@@ -72,6 +72,8 @@ export const icons = {
   clipboardFilled: <HI.HiClipboardCheck />,
   timer: <MD.MdTimer />,
   timerOff: <MD.MdTimerOff />,
+  checkCircle: <MD.MdCheckCircle size={24} color="#78e5d5" />,
+  errorCircle: <MD.MdError size={24} color="#e57878" />,
   group: (
     <HI.HiOutlineUserGroup
       style={{

@@ -1,7 +1,11 @@
 import React, { useState, Dispatch, SetStateAction } from 'react';
 
 import { icons } from '../../../assets/icons';
-import { ValidatedData } from '../../../interfaces/product';
+import {
+  ValidatedData,
+  ProductForm as ProductFormInterface,
+  monetaryValidation,
+} from '../../../interfaces/product';
 import { Image } from '../../../pages/Product';
 import { api, useFetch } from '../../../services';
 import { colors } from '../../../styles/colors';
@@ -84,15 +88,18 @@ const ProductsTable: React.FC<ProductFormProps> = ({
       onClick: async (event?: React.MouseEvent<HTMLButtonElement>) => {
         event?.preventDefault();
 
-        const productID = String(event?.currentTarget.value);
+        const productID = Number(event?.currentTarget.value) + 1;
 
         const product = products.data.items.filter(
-          (product: any) => product.code === productID,
+          (product: ProductFormInterface) => product.id === productID,
         )[0];
 
-        console.log({ product });
+        const { image1, image2, image3 } = product.images;
 
-        setProduct(product);
+        setProduct({
+          ...product,
+          images: [image1, image2, image3],
+        });
         setShowModal(true);
       },
     },
@@ -161,7 +168,7 @@ const ProductsTable: React.FC<ProductFormProps> = ({
         <h1>Produtos</h1>
         {showModal && (
           <ProductForm
-            id={id}
+            products={products}
             product={product}
             onHide={() => setShowModal(false)}
           />
