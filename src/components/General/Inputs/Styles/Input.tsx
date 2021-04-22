@@ -168,7 +168,6 @@ const StyledInput = (props: Input) => `
   color: ${props.color || colors.input};
   font-size: ${props.textSize || '16px'};
   letter-spacing: 0.6px;
-  font-family: 'Accord Alternate', sans-serif;
   font-weight: ${props.fontWeight || 'normal'};
   letter-spacing: ${props.letterSpacing || 'normal'};
   text-align: ${props.alignToRight ? 'end' : 'unset'};

@@ -13,10 +13,15 @@ const imagesTypes = ['image/png', 'image/jpg', 'image/jpeg'];
 
 interface Props {
   onUpload: (files: any[], event: DropEvent) => void;
+  disabled?: boolean;
 }
 
-const Upload: React.FC<Props> = ({ onUpload }) => {
+const Upload: React.FC<Props> = ({ onUpload, disabled }) => {
   const renderDragMessage = (isDragActive: boolean, isDragReject: boolean) => {
+    if (disabled)
+      return (
+        <UploadMessage type="error">Limite de imagens atingido</UploadMessage>
+      );
     if (!isDragActive)
       return <UploadMessage>Arraste os aquivos aqui...</UploadMessage>;
 
@@ -33,6 +38,8 @@ const Upload: React.FC<Props> = ({ onUpload }) => {
       accept={imagesTypes}
       onDropAccepted={onUpload}
       maxSize={MAX_IMAGE_SIZE}
+      maxFiles={3}
+      disabled={disabled}
     >
       {({ getInputProps, getRootProps, isDragActive, isDragReject }) => (
         <>
@@ -40,6 +47,7 @@ const Upload: React.FC<Props> = ({ onUpload }) => {
             {...getRootProps()}
             isDragActive={isDragActive}
             isDragReject={isDragReject}
+            disabled={disabled}
           >
             <input {...getInputProps()} />
             {renderDragMessage(isDragActive, isDragReject)}

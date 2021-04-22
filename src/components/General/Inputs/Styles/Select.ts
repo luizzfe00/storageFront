@@ -21,7 +21,6 @@ export const Container = styled.div<Container>`
   width: ${({ block }) => (block ? '100%' : 'fit-content')};
   min-width: ${({ largestOption }) => largestOption + 6}ch;
   & > * {
-    font-family: 'Accord Alternate';
     color: ${colors.input};
   }
 `;

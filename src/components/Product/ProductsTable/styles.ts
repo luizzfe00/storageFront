@@ -4,8 +4,12 @@ import { colors } from '../../../styles/colors';
 export const Container = styled.div`
   header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin-bottom: 3rem;
+  }
+
+  button {
+    margin-left: 1em;
   }
 
   main {

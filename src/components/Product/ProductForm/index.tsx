@@ -79,7 +79,7 @@ const ProductForm: React.FC<ProductFormProp> = ({
 
     setData((prev: any) => ({
       ...prev,
-      qtd: Number(value),
+      quantity: Number(value),
     }));
   };
 
@@ -98,7 +98,13 @@ const ProductForm: React.FC<ProductFormProp> = ({
         value: data.value,
       };
 
-      const response = await api.post(`/product`, body);
+      let response;
+
+      if (product) {
+        response = await api.put(`/product/${data.id}`, body);
+      } else {
+        response = await api.post(`/product`, body);
+      }
 
       mutate('/product', {
         ...products,
@@ -180,7 +186,7 @@ const ProductForm: React.FC<ProductFormProp> = ({
         >
           <Input
             type="number"
-            name="qtd"
+            name="quantity"
             placeholder="0"
             min={0}
             block
@@ -223,6 +229,7 @@ const ProductForm: React.FC<ProductFormProp> = ({
             files={data.images}
             onUpload={onUpload}
             handleDelete={deleteImage}
+            disabled={data.images.length >= 3}
           />
         </Text.Label>
 

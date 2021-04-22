@@ -82,3 +82,7 @@ export const SubmitButton = styled.button`
     filter: brightness(1.03);
   }
 `;
+
+export const DocumentContainer = styled.div`
+  display: flex;
+`;

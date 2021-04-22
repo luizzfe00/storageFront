@@ -3,9 +3,13 @@ import { useHistory } from 'react-router-dom';
 import { BeatLoader } from 'react-spinners';
 
 import { colors } from '../../../styles/colors';
-import Links from '../Links';
 
-import { Container, ButtonChildren, Loader } from './styles';
+import {
+  Container,
+  ButtonChildren,
+  Loader,
+  StylelessContainer,
+} from './styles';
 
 interface Button extends ButtonHTMLAttributes<HTMLButtonElement> {
   block?: boolean;
@@ -45,6 +49,7 @@ interface Button extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   loaderSize?: number;
   areaName?: string;
+  styless?: boolean;
   [props: string]: any;
 }
 
@@ -74,11 +79,14 @@ const Button: React.FC<Button> = ({
   onClick,
   title,
   noWrap,
+  styless = false,
   isLoading = false,
   loaderSize = 15,
   areaName,
   ...props
 }: Button) => {
+  console.log(styless);
+
   const history = useHistory();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -88,8 +96,6 @@ const Button: React.FC<Button> = ({
 
     if (href && !isExternal) history.push(href);
   };
-
-  const { target, rel } = props;
 
   const containerProps = {
     block,
@@ -135,7 +141,26 @@ const Button: React.FC<Button> = ({
     </Container>
   );
 
-  return <>{buttonContainer}</>;
+  const stylessButton = (
+    <StylelessContainer
+      onClick={handleClick}
+      disabled={isLoading || disabled}
+      color={color}
+    >
+      {!!isLoading && (
+        <Loader isLoading={isLoading}>
+          <BeatLoader color={color || colors.white} size={loaderSize} />
+        </Loader>
+      )}
+      <ButtonChildren className="centered" isLoading={isLoading}>
+        {icon}
+        {text}
+        {children || null}
+      </ButtonChildren>
+    </StylelessContainer>
+  );
+
+  return <>{styless ? stylessButton : buttonContainer}</>;
 };
 
 export default Button;

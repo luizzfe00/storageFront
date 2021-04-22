@@ -6,18 +6,21 @@ const dragActive = css`
 `;
 
 const dragReject = css`
-  border-color: #e57878;
+  border-color: ${colors.invalidBorder};
 `;
 
 interface DropContainerProps {
   isDragActive: boolean;
   isDragReject: boolean;
+  disabled?: boolean;
 }
 
 export const DropContainer = styled.div<DropContainerProps>`
-  border: 1px dashed #ddd;
+  border: 1px dashed
+    ${({ disabled }) =>
+      disabled ? `${colors.invalidBorder}` : `${colors.lightGray}`};
   border-radius: 4px;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
   display: flex;
   flex-direction: column;
@@ -47,7 +50,7 @@ interface MessageProps {
 
 const messageColors: { [type: string]: string } = {
   default: '#999',
-  error: '#e57878',
+  error: colors.invalidBorder,
   success: '#78e5d5',
 };
 

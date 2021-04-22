@@ -47,7 +47,6 @@ export const Container = styled.button<Container>`
 
   grid-area: ${({ areaName }) => areaName ?? 'unset'};
 
-  font-family: 'Accord Alternate', sans-serif;
   transition: all 100ms ease;
   border: ${({ borderColor }) =>
     borderColor ? `1px solid ${borderColor}` : 'none'};
@@ -133,12 +132,25 @@ export const ButtonChildren = styled.div<Loading>`
 interface StylelessContainer {
   margin?: string;
   padding?: string;
+  areaName?: string;
+  disabled?: boolean;
+  color?: string;
 }
 
 export const StylelessContainer = styled.button<StylelessContainer>`
   border: none;
   background-color: transparent;
 
+  color: ${({ color }) => color || colors.black};
+
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+
+  grid-area: ${({ areaName }) => areaName ?? 'unset'};
+
   margin: ${({ margin }) => margin ?? ''};
   padding: ${({ padding }) => padding ?? ''};
+
+  svg {
+    margin-right: 0.4em;
+  }
 `;

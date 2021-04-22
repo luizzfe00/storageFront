@@ -14,6 +14,7 @@ const BasePage: React.FC<BasePage> = ({
   ...props
 }: BasePage) => {
   const { children } = props;
+  console.log(title);
 
   return (
     <Container>

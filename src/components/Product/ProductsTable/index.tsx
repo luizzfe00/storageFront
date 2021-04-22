@@ -1,17 +1,11 @@
-import React, { useState, Dispatch, SetStateAction } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { icons } from '../../../assets/icons';
-import {
-  ValidatedData,
-  ProductForm as ProductFormInterface,
-  monetaryValidation,
-} from '../../../interfaces/product';
-import { Image } from '../../../pages/Product';
+import { ProductForm as ProductFormInterface } from '../../../interfaces/product';
 import { api, useFetch } from '../../../services';
 import { colors } from '../../../styles/colors';
 import Button from '../../General/Button';
 import Input from '../../General/Inputs/Input';
-import Switch from '../../General/Inputs/Switch';
 import { confirmModal } from '../../General/Modal';
 
 import Table, { ActionInterface } from '../../General/Table';
@@ -20,64 +14,49 @@ import ProductForm from '../ProductForm';
 
 import { Container } from './styles';
 
-interface ProductFormProps {
-  monetary: ValidatedData;
-  setValue: Dispatch<SetStateAction<ValidatedData>>;
-
-  id: string;
-
-  query: string;
-  name: string;
-  image: Image;
-  setImage: Dispatch<SetStateAction<Image>>;
-
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-
-  [props: string]: any;
-}
-
-const ProductsTable: React.FC<ProductFormProps> = ({
-  name,
-  setValue,
-  query,
-  id,
-  monetary,
-  onChange,
-  image,
-  setImage,
-  children,
-  ...props
-}) => {
+const ProductsTable: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [product, setProduct] = useState();
+  const [search, setSearch] = useState('');
+  const [query, setQuery] = useState({
+    name: '',
+    code: '',
+  });
 
-  const { data: products } = useFetch('/product');
+  const { data: products } = useFetch('/product', query);
+
+  useEffect(() => {
+    if (search.length > 3) {
+      setQuery({
+        name: search,
+        code: search,
+      });
+    } else {
+      setQuery({
+        name: '',
+        code: '',
+      });
+    }
+  }, [search]);
 
   const data =
     products?.data?.items?.map((item: any) => ({
+      id: item.id,
       code: item.code,
       name: item.name,
       value: item.value,
       quantity: item.quantity,
-      active: (
-        <Switch
-          name="active"
-          value={item.active}
-          leftText="Não"
-          rightText="Sim"
-          height={26}
-          width={40}
-          fontSize={15}
-        />
-      ),
+      active: item.active ? icons.checkCircle : icons.checkCircleOff,
     })) ?? [];
 
   const header = [
-    { name: 'Código' },
+    { name: 'ID', fitContent: true },
+    { name: 'Código', fitContent: true, alignCenter: true },
     { name: 'Nome', isInput: true, alignCenter: true, fitContent: true },
     { name: 'Valor', alignCenter: true, fitContent: true },
     { name: 'Quantidade', alignCenter: true, fitContent: true },
-    { name: 'Ativo', isInput: true, fitContent: true },
+    { name: 'Ativo', isIcon: true, fitContent: true },
   ];
 
   const actions: ActionInterface[] = [
@@ -88,7 +67,9 @@ const ProductsTable: React.FC<ProductFormProps> = ({
       onClick: async (event?: React.MouseEvent<HTMLButtonElement>) => {
         event?.preventDefault();
 
-        const productID = Number(event?.currentTarget.value) + 1;
+        console.log(event?.currentTarget.value);
+
+        const productID = Number(event?.currentTarget.value);
 
         const product = products.data.items.filter(
           (product: ProductFormInterface) => product.id === productID,
@@ -110,7 +91,9 @@ const ProductsTable: React.FC<ProductFormProps> = ({
       onClick: (event?: React.MouseEvent<HTMLButtonElement>) => {
         event?.preventDefault();
 
-        const productID = String(event?.currentTarget.value);
+        console.log(event?.currentTarget.value);
+
+        const productID = Number(event?.currentTarget.value);
 
         const productName = products.data.items.filter(
           (product: any) => product.id === productID,
@@ -140,32 +123,43 @@ const ProductsTable: React.FC<ProductFormProps> = ({
     },
   ];
 
+  const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setSearch(value);
+  };
+
   return (
     <Container>
       <header>
+        {showSearch && (
+          <Input
+            width="20rem"
+            required
+            prepend
+            value={search}
+            onChange={handleQuery}
+          >
+            {icons.search}
+          </Input>
+        )}
+        {!showSearch && (
+          <Button
+            text="Buscar"
+            styless
+            color={colors.link}
+            icon={icons.search}
+            onClick={() => setShowSearch(true)}
+          />
+        )}
         <Button
-          text="ADICIONAR PRODUTO"
-          backgroundColor={colors.primary}
-          paddingRightLeft={60}
-          paddingUpDown={10}
+          text="Add Produto"
+          styless
+          color={colors.link}
           icon={icons.plus}
           onClick={() => setShowModal(true)}
         />
-        <Input
-          width="30rem"
-          required
-          append
-          value={query}
-          appendedColor={colors.svgPrimary}
-          onChange={onChange}
-          name={name}
-          {...props}
-        >
-          {icons.search}
-        </Input>
       </header>
       <main>
-        <h1>Produtos</h1>
         {showModal && (
           <ProductForm
             products={products}
