@@ -4,10 +4,7 @@ import React, { useState, useEffect } from 'react';
 
 import { mutate, cache } from 'swr';
 import { Image } from '../../../interfaces/product';
-import {
-  ProductForm as ProductInterface,
-  initialState,
-} from '../../../interfaces/product';
+import { Product, initialState } from '../../../interfaces/product';
 
 import { api } from '../../../services';
 import { colors } from '../../../styles/colors';
@@ -23,7 +20,7 @@ import Text from '../../General/Text';
 import { Container, ImageInputContentContainer, ModalFooter } from './styles';
 
 interface ProductFormProp {
-  product?: ProductInterface;
+  product?: Product;
   onHide: () => void;
   products?: any;
 }
@@ -33,7 +30,7 @@ const ProductForm: React.FC<ProductFormProp> = ({
   onHide,
   products,
 }) => {
-  const [data, setData] = useState<ProductInterface>(product || initialState);
+  const [data, setData] = useState<Product>(product || initialState);
 
   useEffect(() => {
     if (data.images.length > 3) {
@@ -83,15 +80,15 @@ const ProductForm: React.FC<ProductFormProp> = ({
     }));
   };
 
-  const handleAddProduct = async () => {
+  const handleSubmit = async () => {
     try {
       const body = {
         code: data.code,
         active: data.active,
         images: {
-          image1: data.images[0],
-          image2: data.images[1],
-          image3: data.images[2],
+          image1: data.images[0]?.url,
+          image2: data.images[1]?.url,
+          image3: data.images[2]?.url,
         },
         name: data.name,
         quantity: data.quantity,
@@ -110,6 +107,8 @@ const ProductForm: React.FC<ProductFormProp> = ({
         ...products,
         items: [...products.items, response.data.product],
       });
+
+      onHide();
     } catch (err) {
       console.log({ ...err });
     }
@@ -246,7 +245,7 @@ const ProductForm: React.FC<ProductFormProp> = ({
           />
           <Button
             text="Salvar Produto"
-            onClick={handleAddProduct}
+            onClick={handleSubmit}
             paddingRightLeft={21}
             paddingUpDown={12}
             textSize={16}

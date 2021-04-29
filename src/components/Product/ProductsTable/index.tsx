@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { icons } from '../../../assets/icons';
 import { ProductForm as ProductFormInterface } from '../../../interfaces/product';
@@ -6,170 +6,137 @@ import { api, useFetch } from '../../../services';
 import { colors } from '../../../styles/colors';
 import Button from '../../General/Button';
 import Input from '../../General/Inputs/Input';
-import { confirmModal } from '../../General/Modal';
-
-import Table, { ActionInterface } from '../../General/Table';
+import { confirmModal, infoModal } from '../../General/Modal';
 
 import ProductForm from '../ProductForm';
+import ProductRow from '../ProductRow';
 
-import { Container } from './styles';
+import {
+  PageContainer,
+  PageHeader,
+  Header,
+  TableContainer,
+  Table,
+  Th,
+  Body,
+  ButtonsContainer,
+} from './styles';
 
-const ProductsTable: React.FC = () => {
-  const [showModal, setShowModal] = useState(false);
+export interface PropsQuery {
+  [key: string]: string | boolean | PropsQuery;
+}
+
+export type Mutate = (
+  data?: any,
+  shouldRevalidate?: boolean | undefined,
+) => Promise<any>;
+
+interface ProductsTable {
+  items: any;
+  receivedResponse?: boolean;
+  query: PropsQuery;
+  mutate?: Mutate;
+  count: number;
+}
+
+const alignments = ['', 'left', 'left'];
+
+const ProductsTable: React.FC<ProductsTable> = ({
+  items,
+  count,
+  query,
+  receivedResponse,
+  mutate,
+}: ProductsTable) => {
   const [showSearch, setShowSearch] = useState(false);
-  const [product, setProduct] = useState();
-  const [search, setSearch] = useState('');
-  const [query, setQuery] = useState({
-    name: '',
-    code: '',
-  });
+  const [showProductForm, setShowProductForm] = useState(false);
 
-  const { data: products } = useFetch('/product', query);
-
-  useEffect(() => {
-    if (search.length > 3) {
-      setQuery({
-        name: search,
-        code: search,
-      });
-    } else {
-      setQuery({
-        name: '',
-        code: '',
-      });
-    }
-  }, [search]);
-
-  const data =
-    products?.data?.items?.map((item: any) => ({
-      id: item.id,
-      code: item.code,
-      name: item.name,
-      value: item.value,
-      quantity: item.quantity,
-      active: item.active ? icons.checkCircle : icons.checkCircleOff,
-    })) ?? [];
-
-  const header = [
-    { name: 'ID', fitContent: true },
-    { name: 'Código', fitContent: true, alignCenter: true },
-    { name: 'Nome', isInput: true, alignCenter: true, fitContent: true },
-    { name: 'Valor', alignCenter: true, fitContent: true },
-    { name: 'Quantidade', alignCenter: true, fitContent: true },
-    { name: 'Ativo', isIcon: true, fitContent: true },
+  const headerItens = [
+    { text: '', width: '3%' },
+    { text: 'Código', width: '20%' },
+    { text: 'Produto', width: '25%' },
+    { text: 'Quantidade', width: '8%' },
+    { text: 'Valor', width: '20%' },
+    { text: 'Ativo', width: '10%' },
+    { text: 'Atualizado em', width: '20%' },
+    { text: 'Ações', width: '10%' },
   ];
 
-  const actions: ActionInterface[] = [
-    {
-      title: 'Editar',
-      icon: icons.pencil,
-      color: colors.primary,
-      onClick: async (event?: React.MouseEvent<HTMLButtonElement>) => {
-        event?.preventDefault();
+  const renderTable = () => {
+    return items.map((product: ProductFormInterface, index: number) => (
+      <ProductRow
+        key={`product${index + 1}`}
+        mutate={mutate}
+        product={product}
+        setLoading={() => undefined}
+        isDark={!(index % 2)}
+      />
+    ));
+  };
 
-        console.log(event?.currentTarget.value);
-
-        const productID = Number(event?.currentTarget.value);
-
-        const product = products.data.items.filter(
-          (product: ProductFormInterface) => product.id === productID,
-        )[0];
-
-        const { image1, image2, image3 } = product.images;
-
-        setProduct({
-          ...product,
-          images: [image1, image2, image3],
-        });
-        setShowModal(true);
-      },
-    },
-    {
-      title: 'Excluir',
-      icon: icons.trash,
-      color: colors.canceled,
-      onClick: (event?: React.MouseEvent<HTMLButtonElement>) => {
-        event?.preventDefault();
-
-        console.log(event?.currentTarget.value);
-
-        const productID = Number(event?.currentTarget.value);
-
-        const productName = products.data.items.filter(
-          (product: any) => product.id === productID,
-        )[0].name;
-
-        const content = {
-          title: 'Confirmar remoção do produto',
-          content: (
-            <p>
-              Confirmar remoção do produto <strong>{productName}</strong>,
-            </p>
-          ),
-          confirmText: 'Confirmar',
-          cancelText: 'Cancelar',
-        };
-
-        confirmModal(content).then(async (confirmation) => {
-          if (confirmation) {
-            try {
-              await api.delete(`/product/${productID}`);
-            } catch (err) {
-              console.log(err);
-            }
-          }
-        });
-      },
-    },
-  ];
-
-  const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setSearch(value);
+  const renderNoItems = () => {
+    if (receivedResponse)
+      return (
+        <tr>
+          <td colSpan={8} className="text-center">
+            <h4>Nenhum pedido encontrado.</h4>
+          </td>
+        </tr>
+      );
   };
 
   return (
-    <Container>
-      <header>
-        {showSearch && (
-          <Input
-            width="20rem"
-            required
-            prepend
-            value={search}
-            onChange={handleQuery}
-          >
-            {icons.search}
-          </Input>
-        )}
-        {!showSearch && (
+    <PageContainer>
+      {showProductForm && (
+        <ProductForm onHide={() => setShowProductForm(false)} />
+      )}
+      <PageHeader>
+        <span>
+          <h3>Pedidos Encontrados: {count}</h3>
+        </span>
+        <ButtonsContainer>
+          {showSearch ? (
+            <Input prepend prependedColor={colors.link}>
+              {icons.search}
+            </Input>
+          ) : (
+            <Button
+              text="Buscar"
+              styless
+              icon={icons.search}
+              color={colors.link}
+              onClick={() => setShowSearch(true)}
+            />
+          )}
+
           <Button
-            text="Buscar"
+            text="Criar Produto"
             styless
+            icon={icons.add}
             color={colors.link}
-            icon={icons.search}
-            onClick={() => setShowSearch(true)}
+            onClick={() => setShowProductForm(true)}
           />
-        )}
-        <Button
-          text="Add Produto"
-          styless
-          color={colors.link}
-          icon={icons.plus}
-          onClick={() => setShowModal(true)}
-        />
-      </header>
-      <main>
-        {showModal && (
-          <ProductForm
-            products={products}
-            product={product}
-            onHide={() => setShowModal(false)}
-          />
-        )}
-        <Table data={data} header={header} actions={actions} />
-      </main>
-    </Container>
+        </ButtonsContainer>
+      </PageHeader>
+      <TableContainer>
+        <Table>
+          <Header>
+            <tr>
+              {headerItens.map(({ text, width }, index) => (
+                <Th
+                  key={`orderTableHead#${text}`}
+                  alignment={alignments[index] ?? 'center'}
+                  width={width}
+                >
+                  {text}
+                </Th>
+              ))}
+            </tr>
+          </Header>
+          <Body>{items.length ? renderTable() : renderNoItems()}</Body>
+        </Table>
+      </TableContainer>
+    </PageContainer>
   );
 };
 

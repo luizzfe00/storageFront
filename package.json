@@ -19,6 +19,7 @@
     "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^26.0.15",
     "@types/react-image-crop": "^8.1.2",
+    "@types/react-native": "^0.64.4",
     "@types/react-responsive": "^8.0.2",
     "axios": "^0.21.1",
     "cropperjs": "^1.5.11",

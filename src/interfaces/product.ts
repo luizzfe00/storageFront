@@ -45,8 +45,8 @@ export const initialImages: Image = {
   progress: 10,
 };
 
-export interface ProductForm {
-  id?: number;
+export interface Product {
+  id: string;
   code: string;
   name: string;
   quantity: number;
@@ -54,9 +54,11 @@ export interface ProductForm {
   active: boolean;
   value: string;
   previewer?: string;
+  updatedAt?: Date;
 }
 
-export const initialState: ProductForm = {
+export const initialState: Product = {
+  id: '',
   code: '',
   name: '',
   quantity: 0,

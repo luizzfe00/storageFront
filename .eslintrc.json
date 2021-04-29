@@ -58,6 +58,7 @@
     ],
     "no-underscore-dangle": "off",
     "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-empty-function": "warn",
     "prettier/prettier": "warn",
     "import-helpers/order-imports": [
       "warn",

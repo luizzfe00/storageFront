@@ -85,8 +85,6 @@ const Button: React.FC<Button> = ({
   areaName,
   ...props
 }: Button) => {
-  console.log(styless);
-
   const history = useHistory();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

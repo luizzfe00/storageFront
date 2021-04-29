@@ -3,13 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { BarLoader } from 'react-spinners';
 import { icons } from '../../assets/icons';
 import BasePage from '../../components/General/BasePage';
-import ProductsTable from '../../components/Product/ProductsTable';
-
-import { ProductForm as ProductInterface } from '../../interfaces/product';
+import SellForm from '../../components/Sell';
 
 import { useSWRHook } from '../../services';
 import { colors } from '../../styles/colors';
-import { Header, Container } from './styles';
 
 export interface PropsQuery {
   [key: string]: string | boolean | PropsQuery;
@@ -22,7 +19,7 @@ const INITIAL_QUERY = {
 
 const PAGE_SIZE = 8;
 
-const Orders: React.FC = () => {
+const Sell: React.FC = () => {
   const [query, setQuery] = useState(INITIAL_QUERY);
 
   // Pagination
@@ -39,25 +36,17 @@ const Orders: React.FC = () => {
 
   return (
     <BasePage
-      title="Produtos"
+      title="Venda"
       caretPath={[
         {
-          title: 'Produtos',
-          path: '/products',
+          title: 'Venda',
+          path: '/sell',
         },
       ]}
     >
-      <Container>
-        <ProductsTable
-          receivedResponse={!!data}
-          count={data?.data.count ?? 0}
-          items={data?.data.items ?? []}
-          query={query}
-          mutate={mutate}
-        />
-      </Container>
+      <SellForm products={data?.data?.items} />
     </BasePage>
   );
 };
 
-export default Orders;
+export default Sell;

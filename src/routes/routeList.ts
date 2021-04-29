@@ -24,6 +24,13 @@ export const privateRouteList: RouteProps[] = [
     title: 'Produtos',
     navbar: true,
   },
+  {
+    path: '/sell',
+    component: pages.Sell,
+    exact: true,
+    title: 'Venda',
+    navbar: true,
+  },
 ];
 
 export const publicRouteList: RouteProps[] = [
