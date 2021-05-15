@@ -19,7 +19,7 @@ export const Container = styled.div<Container>`
   grid-area: ${({ areaName }) => areaName ?? ''};
 
   width: ${({ block }) => (block ? '100%' : 'fit-content')};
-  min-width: ${({ largestOption }) => largestOption + 6}ch;
+  min-width: ${({ largestOption }) => largestOption + 8}ch;
   & > * {
     color: ${colors.input};
   }

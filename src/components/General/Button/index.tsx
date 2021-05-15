@@ -141,9 +141,9 @@ const Button: React.FC<Button> = ({
 
   const stylessButton = (
     <StylelessContainer
-      onClick={handleClick}
       disabled={isLoading || disabled}
       color={color}
+      {...containerProps}
     >
       {!!isLoading && (
         <Loader isLoading={isLoading}>

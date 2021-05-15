@@ -84,3 +84,9 @@ export const Footer = styled.tfoot`
     padding: 2em 12px 1em 1em;
   }
 `;
+
+export const QuantityContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;

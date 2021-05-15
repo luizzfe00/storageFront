@@ -1,4 +1,5 @@
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 import { ToastContainer } from 'react-toastify';
 import Routes from './routes';
 
@@ -9,6 +10,16 @@ const App: React.FC = () => {
     <>
       <ToastContainer />
       <Routes />
+      <Toaster
+        toastOptions={{
+          error: {
+            style: {
+              backgroundColor: 'pink',
+              fontWeight: 'bold',
+            },
+          },
+        }}
+      />
     </>
   );
 };

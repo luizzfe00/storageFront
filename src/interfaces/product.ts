@@ -52,7 +52,10 @@ export interface Product {
   quantity: number;
   images: Image[];
   active: boolean;
-  value: string;
+  value: number;
+  sizeType: string;
+  sizeOpt: number;
+  size: string;
   previewer?: string;
   updatedAt?: Date;
 }
@@ -64,6 +67,9 @@ export const initialState: Product = {
   quantity: 0,
   active: false,
   images: [],
-  value: '0.00',
+  value: 0,
+  sizeType: 'adult',
+  sizeOpt: 1,
+  size: 'P',
   previewer: '',
 };

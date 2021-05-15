@@ -76,6 +76,8 @@ export const icons = {
   checkCircle: <MD.MdCheckCircle size={24} color="#7FE157" />,
   checkCircleOff: <MD.MdCheckCircle size={24} color="#ddd" />,
   errorCircle: <MD.MdError size={24} color="#e57878" />,
+  circledAdd: <IO.IoMdAddCircle size={24} color="#7FE157" />,
+  circledSubtract: <MD.MdRemoveCircle size={24} color="#e57878" />,
   group: (
     <HI.HiOutlineUserGroup
       style={{

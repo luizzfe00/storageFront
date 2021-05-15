@@ -6,12 +6,14 @@ export const Container = styled.div`
   padding: 0 40px;
   min-height: 100vh;
   position: relative;
-  padding: 40px 80px;
+  padding: 40px 80px 40px 160px;
+  background-color: #8bc6ec;
+  background-image: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
 
-  background-image: url(${background});
+  /* background-image: url(${background});
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: cover; */
 
   h1 {
     font-size: 25px;

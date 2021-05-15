@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 
 import { icons } from '../../../assets/icons';
-import { ProductForm as ProductFormInterface } from '../../../interfaces/product';
-import { api, useFetch } from '../../../services';
+import { Product } from '../../../interfaces/product';
 import { colors } from '../../../styles/colors';
 import Button from '../../General/Button';
 import Input from '../../General/Inputs/Input';
-import { confirmModal, infoModal } from '../../General/Modal';
 
-import ProductForm from '../ProductForm';
 import ProductRow from '../ProductRow';
 
 import {
@@ -49,7 +46,6 @@ const ProductsTable: React.FC<ProductsTable> = ({
   mutate,
 }: ProductsTable) => {
   const [showSearch, setShowSearch] = useState(false);
-  const [showProductForm, setShowProductForm] = useState(false);
 
   const headerItens = [
     { text: '', width: '3%' },
@@ -63,7 +59,7 @@ const ProductsTable: React.FC<ProductsTable> = ({
   ];
 
   const renderTable = () => {
-    return items.map((product: ProductFormInterface, index: number) => (
+    return items.map((product: Product, index: number) => (
       <ProductRow
         key={`product${index + 1}`}
         mutate={mutate}
@@ -87,12 +83,9 @@ const ProductsTable: React.FC<ProductsTable> = ({
 
   return (
     <PageContainer>
-      {showProductForm && (
-        <ProductForm onHide={() => setShowProductForm(false)} />
-      )}
       <PageHeader>
         <span>
-          <h3>Pedidos Encontrados: {count}</h3>
+          <h3>Produtos Encontrados: {count}</h3>
         </span>
         <ButtonsContainer>
           {showSearch ? (
@@ -108,14 +101,6 @@ const ProductsTable: React.FC<ProductsTable> = ({
               onClick={() => setShowSearch(true)}
             />
           )}
-
-          <Button
-            text="Criar Produto"
-            styless
-            icon={icons.add}
-            color={colors.link}
-            onClick={() => setShowProductForm(true)}
-          />
         </ButtonsContainer>
       </PageHeader>
       <TableContainer>

@@ -5,45 +5,39 @@ export const Container = styled.div`
   display: grid;
   gap: 14px;
   grid-template:
-    'id id id'
-    'name name name'
-    'value qtd active'
-    'image image image'
-    'button button button';
-  grid-template-columns: 1fr 100px 1fr;
+    'code code name name'
+    'value value qtd active'
+    'size size size size'
+    'image image image image'
+    'button button button button';
+  grid-template-columns: 1fr 200px 200px 1fr;
 
-  > div:nth-child(5) {
-    width: 100%;
-    align-items: center;
-  }
-
-  z-index: 51;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background-color: ${colors.white};
   border-radius: 7px;
   padding: 24px;
-  min-width: 50vw;
-`;
 
-export const ModalFooter = styled.div`
-  display: flex;
-  justify-content: center;
-  grid-area: button;
-
-  button {
-    margin-left: 1rem;
+  @media screen and (max-width: 900px) {
+    grid-template:
+      'code code'
+      'name name'
+      'value qtd'
+      'active active'
+      'size size'
+      'image image';
+    grid-template-columns: 1fr 1fr;
   }
 `;
 
-export const ImageInputContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+export const SizeContainer = styled.div`
+  grid-area: size;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+`;
 
-  svg {
-    font-size: 2em;
-  }
+export const SizeOptions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  /* @media screen and (max-width: 800px) {
+    flex-direction: column;
+  } */
 `;

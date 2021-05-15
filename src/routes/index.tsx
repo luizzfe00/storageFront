@@ -3,6 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 
+import Navbar from '../components/General/Navbar';
 import PrivateRoute from '../components/General/PrivateRoute';
 import PublicRoute from '../components/General/PublicRoute';
 import { State } from '../redux/Login/types';
@@ -14,16 +15,19 @@ const Routes: React.FC = () => {
   return (
     <BrowserRouter>
       {auth ? (
-        <Switch>
-          {privateRouteList.map((routeProps: RouteProps) => (
-            <PrivateRoute
-              key={`private#${routeProps.path}`}
-              auth={auth}
-              {...routeProps}
-            />
-          ))}
-          <Redirect to="/products" />
-        </Switch>
+        <>
+          <Navbar />
+          <Switch>
+            {privateRouteList.map((routeProps: RouteProps) => (
+              <PrivateRoute
+                key={`private#${routeProps.path}`}
+                auth={auth}
+                {...routeProps}
+              />
+            ))}
+            <Redirect to="/products" />
+          </Switch>
+        </>
       ) : (
         <Switch>
           {publicRouteList.map((routeProps: RouteProps) => (

@@ -3,21 +3,15 @@ import { icons } from '../../../assets/icons';
 
 import { Mutate } from '../../../interfaces';
 import { Product } from '../../../interfaces/product';
-
-import { api, useSWRHook } from '../../../services';
-
 import { colors } from '../../../styles/colors';
+import { formatCurrency } from '../../../utils/formatCurrency';
+
 import Button from '../../General/Button';
 import Dropdown from '../../General/Dropdown';
-import { infoModal } from '../../General/Modal';
 
 import { Row } from '../ProductsTable/styles';
 
-import { Td, OrderValue, ValueAndSourceContainer } from './styles';
-
-interface Status {
-  status: number;
-}
+import { Td, OrderValue } from './styles';
 
 interface ProductRow {
   product: Product;
@@ -39,10 +33,6 @@ const OrderRow: React.FC<ProductRow> = ({
   const toggleDropdown = () => setShowDropdown((prev) => !prev);
   const handleCloseDropdown = () => setShowDropdown(false);
 
-  const onOpenProduct = () => {
-    console.log(product.id);
-  };
-
   return product ? (
     <>
       <Row isDark={isDark}>
@@ -51,7 +41,7 @@ const OrderRow: React.FC<ProductRow> = ({
         <Td>{product.name}</Td>
         <Td align="center">{product.quantity}</Td>
         <Td align="center">
-          <OrderValue>R$ {product.value}</OrderValue>
+          <OrderValue>{formatCurrency(product.value)}</OrderValue>
         </Td>
         <Td align="center">
           {product.active ? icons.checkCircle : icons.checkCircleOff}
@@ -79,8 +69,11 @@ const OrderRow: React.FC<ProductRow> = ({
               />
             }
           >
-            <Dropdown.DropdownItem onClick={onOpenProduct}>
+            <Dropdown.DropdownItem onClick={() => {}}>
               {icons.listMenu} Ver detalhes
+            </Dropdown.DropdownItem>
+            <Dropdown.DropdownItem onClick={() => {}}>
+              {icons.pencil} Editar
             </Dropdown.DropdownItem>
           </Dropdown.Dropdown>
         </Td>

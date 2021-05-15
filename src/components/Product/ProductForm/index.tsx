@@ -2,34 +2,61 @@ import filesize from 'filesize';
 import { uniqueId } from 'lodash';
 import React, { useState, useEffect } from 'react';
 
-import { mutate, cache } from 'swr';
+import { toast } from 'react-hot-toast';
+import { icons } from '../../../assets/icons';
 import { Image } from '../../../interfaces/product';
 import { Product, initialState } from '../../../interfaces/product';
 
-import { api } from '../../../services';
+import api, { getErrorMessage } from '../../../services/api';
 import { colors } from '../../../styles/colors';
-import Backdrop from '../../General/Backdrop';
+import { removeFormatting } from '../../../utils/formatCurrency';
 import Button from '../../General/Button';
+import Checkbox from '../../General/Inputs/Checkbox';
+
+import { onSelectChangeProps } from '../../General/Inputs/definitions';
 import ImageDropzone from '../../General/Inputs/Image';
 import FileList from '../../General/Inputs/Image/FileList';
 import Input from '../../General/Inputs/Input';
 import MonetaryInput from '../../General/Inputs/Monetary';
+import Option from '../../General/Inputs/Option';
+import Radio from '../../General/Inputs/Radio';
+import Select from '../../General/Inputs/Select';
 import Switch from '../../General/Inputs/Switch';
 import Text from '../../General/Text';
 
-import { Container, ImageInputContentContainer, ModalFooter } from './styles';
+import { Container, SizeContainer, SizeOptions } from './styles';
 
 interface ProductFormProp {
   product?: Product;
-  onHide: () => void;
-  products?: any;
 }
 
-const ProductForm: React.FC<ProductFormProp> = ({
-  product,
-  onHide,
-  products,
-}) => {
+const SIZE_OPT = [
+  { id: 0, label: 'Númerico' },
+  { id: 1, label: 'Alfabético' },
+];
+
+const SIZES_ALFA = [
+  { id: 0, label: 'PP', value: false },
+  { id: 1, label: 'P', value: true },
+  { id: 2, label: 'M', value: false },
+  { id: 3, label: 'G', value: false },
+  { id: 4, label: 'GG', value: false },
+];
+
+const SIZES_NUM_ADULT = [
+  { id: 0, label: '34', value: true },
+  { id: 1, label: '35', value: false },
+  { id: 2, label: '33', value: false },
+  { id: 3, label: '36', value: false },
+  { id: 4, label: '37', value: false },
+  { id: 5, label: '38', value: false },
+  { id: 6, label: '39', value: false },
+  { id: 7, label: '40', value: false },
+  { id: 8, label: '41', value: false },
+  { id: 9, label: '42', value: false },
+];
+
+const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
   const [data, setData] = useState<Product>(product || initialState);
 
   useEffect(() => {
@@ -49,7 +76,7 @@ const ProductForm: React.FC<ProductFormProp> = ({
 
     setData((prev: any) => ({
       ...prev,
-      value,
+      value: value,
     }));
   };
 
@@ -95,22 +122,15 @@ const ProductForm: React.FC<ProductFormProp> = ({
         value: data.value,
       };
 
-      let response;
-
       if (product) {
-        response = await api.put(`/product/${data.id}`, body);
+        await api.put(`/product/${data.id}`, body);
+        toast.success('Produto atualizado com sucesso');
       } else {
-        response = await api.post(`/product`, body);
+        await api.post(`/product`, body);
+        toast.success('Produto criado com sucesso');
       }
-
-      mutate('/product', {
-        ...products,
-        items: [...products.items, response.data.product],
-      });
-
-      onHide();
     } catch (err) {
-      console.log({ ...err });
+      toast.error('Erro ao criar produto');
     }
   };
 
@@ -139,6 +159,14 @@ const ProductForm: React.FC<ProductFormProp> = ({
     console.log(id);
   };
 
+  const handleSizeOpt = (event: onSelectChangeProps) => {
+    const { value } = event;
+    setData((prev) => ({
+      ...prev,
+      sizeOpt: Number(value),
+    }));
+  };
+
   return (
     <>
       <Container>
@@ -146,7 +174,7 @@ const ProductForm: React.FC<ProductFormProp> = ({
           block
           spaceBetween
           text="Código"
-          gridArea="id"
+          gridArea="code"
           fontWeight="bold"
         >
           <Input
@@ -194,27 +222,88 @@ const ProductForm: React.FC<ProductFormProp> = ({
           />
         </Text.Label>
 
-        <Text.Label text="Valor" gridArea="value" fontWeight="bold">
+        <Text.Label text="Valor" gridArea="value" fontWeight="bold" block>
           <MonetaryInput
-            width="150px"
+            block
             name="value"
+            type="number"
             value={data.value}
             onChange={handleValue}
           />
         </Text.Label>
 
-        <Text.Label text="Ativo" gridArea="active" fontWeight="bold">
+        <Text.Label text="Ativo" gridArea="active" fontWeight="bold" block>
           <Switch
             name="active"
             value={data.active}
             onChange={handleActive}
             leftText="Não"
             rightText="Sim"
-            height={24}
-            width={35}
+            height={28}
+            width={40}
             fontSize={14}
           />
         </Text.Label>
+
+        <SizeContainer>
+          <Text.Label text="Tamanho da peça" fontWeight="bold">
+            <Radio
+              value={data.sizeType === 'unique'}
+              label="Único"
+              fontWeight={500}
+              fontSize={14}
+            />
+
+            <Radio
+              value={data.sizeType === 'kids'}
+              label="Infantil"
+              fontWeight={500}
+              fontSize={14}
+            />
+
+            <Radio
+              value={data.sizeType === 'adult'}
+              label="Adulto"
+              fontWeight={500}
+              fontSize={14}
+            />
+
+            <Radio
+              value={data.sizeType === 'plus'}
+              label="Plus Size"
+              fontWeight={500}
+              fontSize={14}
+            />
+          </Text.Label>
+
+          <SizeOptions>
+            <Text.Label text="Opções de tamanho" fontWeight="bold">
+              <Select value={data.sizeOpt} onChange={handleSizeOpt}>
+                {SIZE_OPT.map((option) => (
+                  <Option key={option.id} value={option.id}>
+                    {option.label}
+                  </Option>
+                ))}
+              </Select>
+            </Text.Label>
+
+            <Text.Label text="Tamanho" fontWeight="bold">
+              <Select value={data.size}>
+                {data.sizeOpt === 1
+                  ? SIZES_ALFA.map((option) => (
+                      <Option key={option.id} value={option.label}>
+                        {option.label}
+                      </Option>
+                    ))
+                  : SIZES_NUM_ADULT.map((option) => (
+                      <Option key={option.id} value={option.label}>
+                        {option.label}
+                      </Option>
+                    ))}
+              </Select>
+            </Text.Label>
+          </SizeOptions>
+        </SizeContainer>
 
         <Text.Label
           block
@@ -232,29 +321,16 @@ const ProductForm: React.FC<ProductFormProp> = ({
           />
         </Text.Label>
 
-        <ModalFooter>
-          <Button
-            text="Cancelar"
-            onClick={onHide}
-            className="cancelButton"
-            paddingRightLeft={21}
-            paddingUpDown={12}
-            textSize={16}
-            backgroundColor={colors.lightButton}
-            color={colors.darkTextButton}
-          />
-          <Button
-            text="Salvar Produto"
-            onClick={handleSubmit}
-            paddingRightLeft={21}
-            paddingUpDown={12}
-            textSize={16}
-            backgroundColor={colors.confirmButton}
-            color={colors.lightTextButton}
-          />
-        </ModalFooter>
+        {/*<Button
+          text="Salvar Produto"
+          onClick={handleSubmit}
+          paddingRightLeft={21}
+          paddingUpDown={12}
+          textSize={16}
+          backgroundColor={colors.confirmButton}
+          color={colors.lightTextButton}
+        /> */}
       </Container>
-      <Backdrop />
     </>
   );
 };

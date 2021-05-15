@@ -1,63 +1,33 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
-import { BarLoader } from 'react-spinners';
-import { icons } from '../../assets/icons';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import BasePage from '../../components/General/BasePage';
-import ProductsTable from '../../components/Product/ProductsTable';
-
-import { ProductForm as ProductInterface } from '../../interfaces/product';
-
+import ProductForm from '../../components/Product/ProductForm';
 import { useSWRHook } from '../../services';
-import { colors } from '../../styles/colors';
-import { Header, Container } from './styles';
 
-export interface PropsQuery {
-  [key: string]: string | boolean | PropsQuery;
+interface Params {
+  id?: string;
 }
 
-const INITIAL_QUERY = {
-  name: '',
-  code: '',
-};
+const Product: React.FC = () => {
+  const { id } = useParams<Params>();
 
-const PAGE_SIZE = 8;
+  console.log(id);
 
-const Orders: React.FC = () => {
-  const [query, setQuery] = useState(INITIAL_QUERY);
-
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [numberOfPages, setNumberOfPages] = useState(0);
-
-  const bodyQuery = {
-    ...query,
-    size: PAGE_SIZE,
-    page: currentPage,
-  };
-
-  const { data, mutate } = useSWRHook([`/product/all`, null]);
+  const { data } = useSWRHook(id ? [`/product/${id}`, null] : null);
 
   return (
     <BasePage
-      title="Produtos"
+      title="Criar Produto"
       caretPath={[
         {
-          title: 'Produtos',
-          path: '/products',
+          title: 'Novo Produto',
+          path: '/product',
         },
       ]}
     >
-      <Container>
-        <ProductsTable
-          receivedResponse={!!data}
-          count={data?.data.count ?? 0}
-          items={data?.data.items ?? []}
-          query={query}
-          mutate={mutate}
-        />
-      </Container>
+      <ProductForm product={data} />
     </BasePage>
   );
 };
 
-export default Orders;
+export default Product;

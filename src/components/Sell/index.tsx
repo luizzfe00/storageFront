@@ -3,10 +3,12 @@ import { icons } from '../../assets/icons';
 
 import { Product } from '../../interfaces/product';
 import { colors } from '../../styles/colors';
+import { formatCurrency, removeFormatting } from '../../utils/formatCurrency';
 
 import Button from '../General/Button';
 import Combobox from '../General/Inputs/Combobox';
 import Input from '../General/Inputs/Input';
+import { confirmModal } from '../General/Modal';
 
 import {
   StyledTable,
@@ -15,6 +17,7 @@ import {
   Th,
   Td,
   Footer,
+  QuantityContainer,
 } from './styles';
 
 interface Props {
@@ -126,7 +129,7 @@ const Table: React.FC<Table> = ({
   useEffect(() => {
     setTotal(
       Object.values(products).reduce((acc, curr) => {
-        const value = Number(curr.value.replace(',', '.'));
+        const value = removeFormatting(curr.value);
         if (curr.quantity > 0) {
           const totalValue = value * curr.quantity + acc;
           return totalValue;
@@ -137,16 +140,38 @@ const Table: React.FC<Table> = ({
     );
   }, [products]);
 
-  const handleRemove = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const { value } = event.currentTarget;
+  const handleRemove = (id: string, name: string) => {
+    const content = {
+      title: 'Remover produto',
+      footless: true,
+      content: (
+        <p>
+          Deseja exluir <strong>{name}</strong> da lista de compras?
+        </p>
+      ),
+    };
 
-    onRemove(value);
+    confirmModal(content).then((confirmation) => {
+      if (confirmation) onRemove(id);
+    });
   };
 
-  const handleQtd = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name: id, value } = event.target;
+  const handleQtd = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const { name, value } = event.currentTarget;
 
-    onQtdChange(id, Number(value));
+    const product = Object.entries(products).filter(([id, product]) => {
+      if (id === value) return product;
+    })[0][1];
+
+    if (name === 'add') {
+      onQtdChange(value, product.quantity + 1);
+    } else if (name === 'sub') {
+      if (product.quantity - 1 > 0) {
+        onQtdChange(value, product.quantity - 1);
+      } else {
+        handleRemove(value, product.name);
+      }
+    }
   };
 
   return (
@@ -160,34 +185,45 @@ const Table: React.FC<Table> = ({
           <Th width="20%" alignment="left">
             Valor
           </Th>
-          <Th width="10%" alignment="left">
+          <Th width="10%" alignment="center">
             Quantidade
           </Th>
         </tr>
       </thead>
       <tbody>
         {!isLoading &&
-          Object.values(products).map((product) => (
-            <tr key={product.id}>
+          Object.entries(products).map(([id, product]) => (
+            <tr key={id}>
               <Td />
               <Td>{product.name}</Td>
               <Td>R$ {product.value}</Td>
-              <Td align="center">
-                <Button text="" name="add" icon={icons.checkCircle} styless />
-                <Input
-                  width="60px"
-                  type="number"
-                  disabled
-                  name={product.id}
-                  value={product.quantity}
-                  onChange={handleQtd}
-                />
-                <Button
-                  text=""
-                  name="sub"
-                  icon={icons.checkCircleOff}
-                  styless
-                />
+              <Td>
+                <QuantityContainer>
+                  <Button
+                    text=""
+                    name="sub"
+                    value={id}
+                    icon={icons.circledSubtract}
+                    onClick={handleQtd}
+                    styless
+                  />
+                  <Input
+                    type="number"
+                    name="quantity"
+                    width="80px"
+                    min={0}
+                    onChange={() => {}}
+                    value={product.quantity}
+                  />
+                  <Button
+                    text=""
+                    name="add"
+                    value={id}
+                    onClick={handleQtd}
+                    icon={icons.circledAdd}
+                    styless
+                  />
+                </QuantityContainer>
               </Td>
             </tr>
           ))}
@@ -196,9 +232,10 @@ const Table: React.FC<Table> = ({
         <tr>
           <Td />
           <Td>Total</Td>
-          <Td align="left">R$ {total}</Td>
+          <Td align="left">{formatCurrency(total)}</Td>
           <Td align="left">
             <Button
+              name="submit"
               text="Confirmar"
               backgroundColor={colors.confirmButton}
               paddingRightLeft={48}

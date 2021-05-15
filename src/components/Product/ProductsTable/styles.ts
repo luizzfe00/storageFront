@@ -81,15 +81,18 @@ export const Row = styled.tr<Row>`
 `;
 
 export const PageContainer = styled.div`
-  padding: 32px 0;
+  padding: 32px 0 0;
   background-color: ${colors.white};
   color: ${colors.darkerSecondary};
+  border-radius: 10px;
 `;
 
 export const TableContainer = styled.div`
   overflow-x: auto;
   width: 100%;
   padding-bottom: 16px;
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2), 0 25px 30px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 
   ${StyledScrollX}
 `;
@@ -134,7 +137,7 @@ export const Th = styled.th<Th>`
   font-size: 16px !important;
   font-weight: 500 !important;
   color: ${colors.tableHeader} !important;
-  padding: 0 12px 18px 12px;
+  padding: 8px 12px 18px 12px;
 `;
 
 interface Td {

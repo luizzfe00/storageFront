@@ -8,6 +8,7 @@ export interface RouteProps extends ReactDOMRouterProps {
   isSubRoute?: boolean;
   title: string;
   navbar: boolean;
+  icon?: JSX.Element;
   path?: string;
   group?: string;
   auth?: boolean;
@@ -19,8 +20,9 @@ export interface RouteProps extends ReactDOMRouterProps {
 export const privateRouteList: RouteProps[] = [
   {
     path: '/products',
-    component: pages.Product,
+    component: pages.Products,
     exact: true,
+    icon: icons.listMenu,
     title: 'Produtos',
     navbar: true,
   },
@@ -28,8 +30,18 @@ export const privateRouteList: RouteProps[] = [
     path: '/sell',
     component: pages.Sell,
     exact: true,
+    icon: icons.dollarCircle,
     title: 'Venda',
     navbar: true,
+  },
+  {
+    path: '/product/:id?',
+    component: pages.Product,
+    exact: true,
+    icon: icons.circledAdd,
+    title: 'Criar Produto',
+    navbar: true,
+    id: true,
   },
 ];
 
