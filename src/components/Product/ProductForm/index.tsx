@@ -30,9 +30,22 @@ interface ProductFormProp {
   product?: Product;
 }
 
+const PRODUCT_GENDER = [
+  { id: 0, label: 'Unissex' },
+  { id: 1, label: 'Masculino' },
+  { id: 2, label: 'Feminino' },
+];
+
+const SIZE_TYPE = [
+  { id: 0, label: 'Único' },
+  { id: 1, label: 'Criança' },
+  { id: 2, label: 'Adulto' },
+  { id: 3, label: 'Plus Size' },
+];
+
 const SIZE_OPT = [
-  { id: 0, label: 'Númerico' },
-  { id: 1, label: 'Alfabético' },
+  { id: 0, label: 'Alfabético' },
+  { id: 1, label: 'Numérico' },
 ];
 
 const SIZES_ALFA = [
@@ -44,9 +57,9 @@ const SIZES_ALFA = [
 ];
 
 const SIZES_NUM_ADULT = [
-  { id: 0, label: '34', value: true },
-  { id: 1, label: '35', value: false },
-  { id: 2, label: '33', value: false },
+  { id: 0, label: '33', value: true },
+  { id: 1, label: '34', value: false },
+  { id: 2, label: '35', value: false },
   { id: 3, label: '36', value: false },
   { id: 4, label: '37', value: false },
   { id: 5, label: '38', value: false },
@@ -247,62 +260,50 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
 
         <SizeContainer>
           <Text.Label text="Tamanho da peça" fontWeight="bold">
-            <Radio
-              value={data.sizeType === 'unique'}
-              label="Único"
-              fontWeight={500}
-              fontSize={14}
-            />
-
-            <Radio
-              value={data.sizeType === 'kids'}
-              label="Infantil"
-              fontWeight={500}
-              fontSize={14}
-            />
-
-            <Radio
-              value={data.sizeType === 'adult'}
-              label="Adulto"
-              fontWeight={500}
-              fontSize={14}
-            />
-
-            <Radio
-              value={data.sizeType === 'plus'}
-              label="Plus Size"
-              fontWeight={500}
-              fontSize={14}
-            />
+            <Select value={data.sizeType}>
+              {SIZE_TYPE.map((option) => (
+                <Option key={option.id} value={option.id}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
           </Text.Label>
 
-          <SizeOptions>
-            <Text.Label text="Opções de tamanho" fontWeight="bold">
-              <Select value={data.sizeOpt} onChange={handleSizeOpt}>
-                {SIZE_OPT.map((option) => (
-                  <Option key={option.id} value={option.id}>
-                    {option.label}
-                  </Option>
-                ))}
-              </Select>
-            </Text.Label>
+          <Text.Label text="Opções de tamanho" fontWeight="bold">
+            <Select value={data.sizeOpt} onChange={handleSizeOpt}>
+              {SIZE_OPT.map((option) => (
+                <Option key={option.id} value={option.id}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Text.Label>
 
-            <Text.Label text="Tamanho" fontWeight="bold">
-              <Select value={data.size}>
-                {data.sizeOpt === 1
-                  ? SIZES_ALFA.map((option) => (
-                      <Option key={option.id} value={option.label}>
-                        {option.label}
-                      </Option>
-                    ))
-                  : SIZES_NUM_ADULT.map((option) => (
-                      <Option key={option.id} value={option.label}>
-                        {option.label}
-                      </Option>
-                    ))}
-              </Select>
-            </Text.Label>
-          </SizeOptions>
+          <Text.Label text="Tamanho" fontWeight="bold">
+            <Select value={data.sizeValue}>
+              {data.sizeOpt === 0
+                ? SIZES_ALFA.map((option) => (
+                    <Option key={option.id} value={option.label}>
+                      {option.label}
+                    </Option>
+                  ))
+                : SIZES_NUM_ADULT.map((option) => (
+                    <Option key={option.id} value={option.label}>
+                      {option.label}
+                    </Option>
+                  ))}
+            </Select>
+          </Text.Label>
+
+          <Text.Label text="Gênero" fontWeight="bold">
+            <Select>
+              {PRODUCT_GENDER.map((option) => (
+                <Option key={option.id} value={option.id}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Text.Label>
         </SizeContainer>
 
         <Text.Label

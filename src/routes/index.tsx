@@ -25,7 +25,13 @@ const Routes: React.FC = () => {
                 {...routeProps}
               />
             ))}
-            <Redirect to="/products" />
+            <Redirect
+              to={
+                localStorage.getItem('@MyAccount:redirect')?.includes('true')
+                  ? `/myAccount`
+                  : '/products'
+              }
+            />
           </Switch>
         </>
       ) : (
@@ -37,7 +43,7 @@ const Routes: React.FC = () => {
               {...routeProps}
             />
           ))}
-          <Redirect to="/auth" />
+          <Redirect to="/" />
         </Switch>
       )}
     </BrowserRouter>

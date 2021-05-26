@@ -7,8 +7,7 @@ export const Container = styled.div`
   min-height: 100vh;
   position: relative;
   padding: 40px 80px 40px 160px;
-  background-color: #8bc6ec;
-  background-image: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
+  background-color: #fff;
 
   /* background-image: url(${background});
   background-position: center;

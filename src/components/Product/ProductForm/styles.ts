@@ -13,6 +13,7 @@ export const Container = styled.div`
   grid-template-columns: 1fr 200px 200px 1fr;
 
   background-color: ${colors.white};
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2), 0 25px 30px rgba(0, 0, 0, 0.2);
   border-radius: 7px;
   padding: 24px;
 
@@ -30,8 +31,12 @@ export const Container = styled.div`
 
 export const SizeContainer = styled.div`
   grid-area: size;
-  display: grid;
-  grid-template-columns: 200px 1fr;
+  display: flex;
+  flex-wrap: wrap;
+
+  > div {
+    margin-right: 1rem;
+  }
 `;
 
 export const SizeOptions = styled.div`
