@@ -43,14 +43,14 @@ export const privateRouteList: RouteProps[] = [
     navbar: true,
     id: true,
   },
-  {
-    path: '/orders',
-    component: pages.Orders,
-    exact: true,
-    icon: icons.clipboard,
-    title: 'Pedidos',
-    navbar: true,
-  },
+  // {
+  //   path: '/orders',
+  //   component: pages.Orders,
+  //   exact: true,
+  //   icon: icons.clipboard,
+  //   title: 'Pedidos',
+  //   navbar: true,
+  // },
 ];
 
 export const publicRouteList: RouteProps[] = [

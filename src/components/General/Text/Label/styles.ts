@@ -61,8 +61,10 @@ export const Label = styled.label<Label>`
 interface ChildrenContainer {
   childrenHeight?: string;
   childrenWidth?: string;
+  alignSelf?: string;
 }
 export const ChildrenContainer = styled.div<ChildrenContainer>`
   ${({ childrenHeight }) => (childrenHeight ? { height: childrenHeight } : '')}
   ${({ childrenWidth }) => (childrenWidth ? { width: childrenWidth } : '')}
+  align-self: ${({ alignSelf }) => alignSelf || 'unset'};
 `;

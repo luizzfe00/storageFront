@@ -45,7 +45,7 @@ const Login: React.FC = () => {
 
     const response: LoginResponse = await api.post('/auth/signin', data);
 
-    const { token, myAccount } = response.data;
+    const { token, myAccount } = response?.data;
 
     dispatch(login(token, myAccount));
   };

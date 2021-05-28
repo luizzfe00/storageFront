@@ -3,8 +3,7 @@ interface IAccountRegister extends IAccount {
 }
 
 interface IAccount {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   birthDate: string;
   businessName: string;
@@ -24,7 +23,7 @@ interface ISocial {
 }
 
 interface IAccountDocument {
-  documentType: string;
+  documentType: number;
   documentNumber: string;
   issuer: string;
   issueDate: string;
@@ -33,7 +32,7 @@ interface IAccountDocument {
 
 interface IAddress {
   street: string;
-  number: number;
+  number: number | null;
   complement?: string;
   neighborhood: string;
   zipCode: string;
