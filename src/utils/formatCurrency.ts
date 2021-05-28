@@ -2,6 +2,8 @@ export function formatCurrency(
   value: Number | number | string,
   withoutCurrency = false,
 ): string {
+  if (typeof value == 'string') value = removeFormatting(value);
+
   const configs = withoutCurrency
     ? { minimumFractionDigits: 2 }
     : { style: 'currency', currency: 'BRL' };

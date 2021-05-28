@@ -21,32 +21,55 @@ export const monetaryValidation = (value: string, currency: string): string =>
       }${UtilsFunctions.formatCurrency(MINIMUM_VALUE, true)}`
     : '';
 
-export interface ProductForm {
-  code: string;
+export interface Image {
+  file?: File;
+  url: string;
+  uploaded: boolean;
+  error: boolean;
+  id: number;
+  readableSize: string;
+  size: number;
   name: string;
-  qtd: number;
-  image: string;
-  active: boolean;
-  monetary: ValidatedData;
-  previewer?: string;
+  progress: number;
 }
 
-export const initialState: ProductForm = {
-  code: '',
+export const initialImages: Image = {
+  file: undefined,
+  url: '',
+  uploaded: false,
+  error: false,
+  id: 0,
+  readableSize: '',
+  size: 0,
   name: '',
-  qtd: 0,
-  active: false,
-  image: '',
-  monetary: initialMonetary,
-  previewer: '',
+  progress: 10,
 };
 
-export interface ImageInterface {
-  url: string;
-  file?: File;
+export interface Product {
+  id: string;
+  code: string;
+  name: string;
+  quantity: number;
+  images: Image[];
+  active: boolean;
+  value: number;
+  sizeType: number;
+  sizeOpt: number;
+  sizeValue: string;
+  previewer?: string;
+  updatedAt?: Date;
 }
 
-export const initialImage: ImageInterface = {
-  url: '',
-  file: undefined,
+export const initialState: Product = {
+  id: '',
+  code: '',
+  name: '',
+  quantity: 0,
+  active: false,
+  images: [],
+  value: 0,
+  sizeType: 0,
+  sizeOpt: 0,
+  sizeValue: 'P',
+  previewer: '',
 };

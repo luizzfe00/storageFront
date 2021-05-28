@@ -10,7 +10,7 @@ import { config } from '../config';
 import { logout } from '../redux';
 import store from '../redux/store';
 
-const EXPIRED_AUTH_MESSAGES = ['Sua Sessão Expirou.'];
+const EXPIRED_AUTH_MESSAGES = ['Sua Sessão Expirou.', 'Token Inválido'];
 
 const api = axios.create({ baseURL: `${config.apiURL}/api/v1` });
 
@@ -26,7 +26,7 @@ const requestHandler = (request: AxiosRequestConfig) => {
 
 api.interceptors.request.use((request) => requestHandler(request));
 
-api.interceptors.request.use(
+api.interceptors.response.use(
   (response) => {
     return response;
   },

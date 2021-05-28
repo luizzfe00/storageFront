@@ -1,12 +1,18 @@
 import styled from 'styled-components';
+import background from '../../../assets/svg/background.svg';
 import { colors } from '../../../styles/colors';
 
 export const Container = styled.div`
-  background: ${colors.background};
-  font-family: 'Accord Alternate';
   padding: 0 40px;
   min-height: 100vh;
   position: relative;
+  padding: 40px 80px 40px 160px;
+  background-color: #fff;
+
+  /* background-image: url(${background});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; */
 
   h1 {
     font-size: 25px;

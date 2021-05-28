@@ -47,8 +47,6 @@ export const Label = styled.label<Label>`
   border-radius: 2px;
   gap: ${({ gap }) => (gap ? `${gap}px` : '')};
 
-  font-family: 'Accord Alternate';
-
   font-size: ${({ fontSize }) => fontSize || '1rem'};
   color: ${({ color }) => color || colors.input};
   font-weight: ${({ fontWeight }) => fontWeight || '400'};
@@ -63,8 +61,10 @@ export const Label = styled.label<Label>`
 interface ChildrenContainer {
   childrenHeight?: string;
   childrenWidth?: string;
+  alignSelf?: string;
 }
 export const ChildrenContainer = styled.div<ChildrenContainer>`
   ${({ childrenHeight }) => (childrenHeight ? { height: childrenHeight } : '')}
   ${({ childrenWidth }) => (childrenWidth ? { width: childrenWidth } : '')}
+  align-self: ${({ alignSelf }) => alignSelf || 'unset'};
 `;

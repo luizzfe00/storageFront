@@ -46,9 +46,9 @@ export const Container = styled.div<ContainerInterface>`
   ::before {
     content: '';
     width: ${({ width, textWidth }) =>
-      width ? `${width}px` : `${`calc(${textWidth}ch + 35px)`}`};
+      width ? `${width}px` : `${`calc(${textWidth}ch + 45px)`}`};
     background-color: ${colors.white};
-    height: ${({ height }) => `${(height && height - 6) || 36}px`};
+    height: ${({ height }) => `${(height && height - 8) || 36}px`};
     border-radius: ${({ height }) => `${(height && height / 2) || 20}px`};
     position: absolute;
     transition: all ease-in-out 200ms;

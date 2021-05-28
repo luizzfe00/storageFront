@@ -19,3 +19,20 @@ export const StyledScrollY = `
     border-radius: 10px;
   }
 `;
+
+export const StyledScrollX = `
+  ::-webkit-scrollbar {
+    background-color: '#e8e8e8';
+    height: 5px;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: '#e8e8e8';
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: initial;
+  }
+`;

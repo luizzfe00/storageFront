@@ -1,119 +1,132 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { colors } from '../../../../styles/colors';
 
-interface Container {
-  short?: boolean;
-  block?: boolean;
+const dragActive = css`
+  border-color: #78e5d5;
+`;
+
+const dragReject = css`
+  border-color: ${colors.invalidBorder};
+`;
+
+interface DropContainerProps {
+  isDragActive: boolean;
+  isDragReject: boolean;
+  disabled?: boolean;
 }
 
-export const Container = styled.div<Container>`
-  width: ${({ block }) => (block ? '100%' : '500px')};
-  height: fit-content;
+export const DropContainer = styled.div<DropContainerProps>`
+  border: 1px dashed
+    ${({ disabled }) =>
+      disabled ? `${colors.invalidBorder}` : `${colors.lightGray}`};
+  border-radius: 4px;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
   display: flex;
   flex-direction: column;
 
-  button {
-    margin-top: 12px;
-    width: 100%;
-    height: 42px;
-  }
-
-  & > :last-child {
-    margin-top: 16px;
-    margin-bottom: 16px;
-  }
-`;
-
-export const Dropzone = styled.div`
-  outline: none !important;
-`;
-
-interface ContentContainer {
-  disabled?: boolean;
-  short?: boolean;
-  isValid: boolean;
-}
-
-export const ContentContainer = styled.div<ContentContainer>`
-  position: relative;
-
-  display: flex;
-  flex-direction: ${({ short }) => (short ? 'row' : 'column')};
-  justify-content: center;
   align-items: center;
 
-  border: 1.5px dashed
-    ${({ isValid }) => (isValid ? colors.inputBorder : colors.invalidBorder)};
-  border-radius: 10px;
+  min-height: 70px;
 
-  transition: all 300ms ease-in-out;
+  transition: height 0.2s ease;
 
-  max-width: 100%;
-  min-height: ${({ short }) => (short ? '150px' : '200px')};
-  height: ${({ short }) => (short ? '150px' : '-webkit-fill-available')};
+  ${({ isDragActive }) => isDragActive && dragActive}
+  ${({ isDragReject }) => isDragReject && dragReject}
 
-  background: transparent;
-
-  button {
-    position: absolute;
-    width: 50px;
-    height: 42px;
+  svg {
+    width: 32px;
+    height: 32px;
   }
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    opacity: 100% !important;
-    height: -webkit-fill-available;
+  p {
+    margin: 5px 0;
   }
+`;
 
-  span {
-    ${({ short }) => (short ? 'margin: 0 10px' : '')};
-    font-weight: 300;
-  }
+interface MessageProps {
+  type?: string;
+}
 
-  strong,
-  span {
-    text-align: center;
-    font-family: 'Accord Alternate';
-    color: ${colors.input};
-  }
+const messageColors: { [type: string]: string } = {
+  default: '#999',
+  error: colors.invalidBorder,
+  success: '#78e5d5',
+};
 
-  &,
-  &:focus {
-    outline: none !important;
-  }
+export const UploadMessage = styled.p<MessageProps>`
+  display: flex;
+  color: #999;
+  color: ${({ type }) => (type ? messageColors[type] : messageColors.default)};
+`;
 
-  &:hover {
-    cursor: ${({ disabled }) => (disabled ? 'unset' : 'pointer')};
-    user-select: none;
-    box-shadow: ${({ isValid }) => `0 0 0 4px
-      ${isValid ? colors.primaryShadow : `${colors.invalidBorder}33`}`};
-  }
+export const InfoContainer = styled.ul`
+  margin-top: 20px;
 
-  .cropperBox {
-    max-height: 100%;
-    max-width: 100%;
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: '#444444';
 
-    span {
-      margin: 0 !important;
-    }
-
-    img {
-      height: 100%;
-      max-height: 150px;
+    & + li {
+      margin-top: 15px;
     }
   }
 `;
 
-export const SelectedContainer = styled(ContentContainer)`
-  position: relative;
+export const FileInfo = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  div {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      font-size: 12px;
+      color: '#999999';
+      margin-top: 5px;
+
+      button {
+        border: 0;
+        background: transparent;
+        color: '#e57878';
+        margin-left: 5px;
+        cursor: pointer;
+      }
+    }
   }
+`;
+
+interface PreviewProps {
+  src: any;
+}
+
+export const Preview = styled.div<PreviewProps>`
+  width: 72px;
+  height: 72px;
+  border-radius: 5px;
+  background-image: url(${({ src }) => src});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+  margin-right: 10px;
+`;
+
+export const Container = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const Content = styled.div`
+  width: 100%;
+  max-width: 600px;
+  margin: 10px;
+  background: 4px;
+  border-radius: 4px;
+  padding: 10px;
 `;

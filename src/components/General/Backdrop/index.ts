@@ -13,6 +13,7 @@ const fadeIn = keyframes`
 
 interface Backdrop {
   onClick?: Function;
+  backgroundColor?: string;
 }
 
 const Backdrop = styled.div<Backdrop>`
@@ -24,7 +25,8 @@ const Backdrop = styled.div<Backdrop>`
 
   z-index: 49;
 
-  background-color: rgba(220, 220, 220, 0.6);
+  background-color: ${({ backgroundColor }) =>
+    backgroundColor || 'rgba(220, 220, 220, 0.6)'};
   animation: ${fadeIn} 300ms cubic-bezier(0.2, 0.63, 0.32, 1.28);
 `;
 

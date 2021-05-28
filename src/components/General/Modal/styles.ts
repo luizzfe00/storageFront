@@ -57,6 +57,8 @@ export const ModalBody = styled.div`
   flex: 1 1 auto;
   padding: 1rem;
   margin-top: 0;
+
+  text-align: center;
 `;
 
 export const ModalFooter = styled.footer`
@@ -65,6 +67,8 @@ export const ModalFooter = styled.footer`
   align-items: center;
   justify-content: flex-end;
   padding: 0.75rem;
+
+  justify-content: center;
 
   button {
     width: fit-content;

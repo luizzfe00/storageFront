@@ -17,15 +17,15 @@ export const Container = styled.table`
 
 export const HeaderContainer = styled.thead`
   border-bottom: 1px solid ${colors.inputBorder};
+  border-top: 1px solid ${colors.inputBorder};
 
   th {
     font-size: 16px !important;
-    font-weight: 700 !important;
+    font-weight: 500 !important;
     letter-spacing: 1px !important;
     line-height: 25px !important;
     color: ${colors.tableHeader} !important;
-    padding: 0px 12px;
-    padding-bottom: 18px;
+    padding: 8px 8px;
     min-width: 160px;
     text-align: left;
   }
@@ -51,7 +51,7 @@ export const AllRowsContainer = styled.tbody``;
 
 export const RowContainer = styled.tr`
   &:first-child td {
-    padding-top: 18px;
+    padding-top: 10px;
   }
 
   td {
@@ -60,8 +60,9 @@ export const RowContainer = styled.tr`
     font-weight: 700;
     letter-spacing: 0.6px;
     line-height: 15px;
-    padding: 6px 12px;
+    padding: 6px 8px;
     min-width: 160px;
+    border-bottom: 1px solid ${colors.inputBorder};
   }
 
   & td:last-child {
@@ -74,6 +75,10 @@ export const RowContainer = styled.tr`
 
   td.fit-content {
     min-width: fit-content;
+  }
+
+  :hover {
+    background-color: ${colors.offerInfoBackground};
   }
 `;
 

@@ -34,7 +34,6 @@ const StyledElement = (props: LinkInterface) => `
   letter-spacing: ${props.letterSpacing}px;
   fontWeight: ${props.fontWeight}
   transition: all 100ms ease;
-  font-family: 'Accord Alternate', sans-serif;
 
   &:hover {
     color: ${props.hoverColor};

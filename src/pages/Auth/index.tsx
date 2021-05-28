@@ -1,4 +1,5 @@
 import React, { useState, createContext } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { AuthContext } from '../../components/Auth/authContext';
 import LoginForm from '../../components/Auth/Login';
@@ -26,6 +27,8 @@ const Auth: React.FC = () => {
   const [isExpanded, setExpanded] = useState(false);
   const [active, setActive] = useState('signin');
 
+  const history = useHistory();
+
   const playExpandingAnimation = () => {
     setExpanded(true);
     setTimeout(() => {
@@ -37,6 +40,7 @@ const Auth: React.FC = () => {
     playExpandingAnimation();
     setTimeout(() => {
       setActive('signup');
+      history.push('/register');
     }, 200);
   };
 
@@ -44,6 +48,7 @@ const Auth: React.FC = () => {
     playExpandingAnimation();
     setTimeout(() => {
       setActive('signin');
+      history.push('/login');
     }, 200);
   };
 

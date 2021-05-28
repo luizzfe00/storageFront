@@ -1,7 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
+import { icons } from '../../assets/icons';
+import { api } from '../../services';
 import Input from '../General/Inputs/Input';
-import Select from '../General/Inputs/Select';
 
 import { AuthContext } from './authContext';
 
@@ -13,23 +15,88 @@ import {
   SubmitButton,
 } from './styles';
 
+interface RegisterForm {
+  email: string;
+  password: string;
+  confirmPwd?: string;
+}
+
+const initialState: RegisterForm = {
+  email: '',
+  password: '',
+  confirmPwd: '',
+};
+
 const Register: React.FC = () => {
+  const history = useHistory();
   const { switchToSignin } = useContext(AuthContext);
+
+  const [data, setData] = useState<RegisterForm>(initialState);
+
+  const handleData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+      const body = {
+        email: data.email.trim(),
+        password: data.password,
+      };
+
+      await api.post('/producer', body);
+      history.push('/login');
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <BoxContainer>
-      <FormContainer>
-        <Input type="text" placeholder="Nome completo" block />
-        <Input type="email" placeholder="Email" block />
-        <Input type="password" placeholder="Senha" block />
-        <Input type="password" placeholder="Confirme sua senha" block />
-        <Input type="text" placeholder="Nome do negócio" block />
-        <Input type="text" placeholder="Telefone" block />
-        <Input type="text" placeholder="CPF/CNPJ" block />
-        <Input type="text" placeholder="Órgão expeditor" />
-        <Input type="date" placeholder="Data de expedição" />
+      <FormContainer onSubmit={handleSubmit}>
+        <Input
+          value={data.email}
+          name="email"
+          type="email"
+          placeholder="Email"
+          block
+          prepend
+          onChange={handleData}
+        >
+          {icons.mailOutline}
+        </Input>
+        <Input
+          name="password"
+          type="password"
+          placeholder="Senha"
+          value={data.password}
+          onChange={handleData}
+          block
+          prepend
+        >
+          {icons.password}
+        </Input>
+        <Input
+          name="confirmPwd"
+          type="password"
+          placeholder="Confirme sua senha"
+          value={data.confirmPwd}
+          onChange={handleData}
+          block
+          prepend
+        >
+          {icons.password}
+        </Input>
+        <SubmitButton type="submit">Confirmar</SubmitButton>
       </FormContainer>
-      <SubmitButton type="submit">Confirmar</SubmitButton>
       <MutedLink href="#">
         Já possui uma conta?
         <BoldLink href="#" onClick={switchToSignin}>

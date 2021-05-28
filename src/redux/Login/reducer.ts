@@ -9,6 +9,10 @@ const reducer = (state = initialState, action: Actions) => {
   switch (action.type) {
     case LOGIN:
       localStorage.setItem('@Vendor:token', action.token);
+      localStorage.setItem(
+        '@MyAccount:redirect',
+        `${action.redirectToMyAccount}`,
+      );
 
       return {
         ...state,

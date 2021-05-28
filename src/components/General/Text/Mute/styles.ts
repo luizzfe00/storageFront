@@ -8,7 +8,6 @@ interface Container {
 
 export const Container = styled.p<Container>`
   color: ${colors.mutedText};
-  font-family: 'Accord Alternate';
   font-size: ${({ fontSize }) => fontSize ?? '12px'};
   font-weight: 200;
   line-height: 12px;

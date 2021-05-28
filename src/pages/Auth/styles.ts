@@ -10,7 +10,7 @@ export const BoxContainer = styled.div`
   flex-direction: column;
   border-radius: 19px;
   background-color: ${colors.white};
-  box-shadow: 0 0 2px ${colors.containerShadow};
+  box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2), 0 25px 30px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
 `;

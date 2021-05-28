@@ -57,18 +57,18 @@ const ActionModal: React.FC<ActionModalProps> = ({
   const [show, setShow] = useState(true);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const pinModal = () => {
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${window.scrollY}px`;
-  };
+  // const pinModal = () => {
+  //   document.body.style.position = 'fixed';
+  //   document.body.style.top = `-${window.scrollY}px`;
+  // };
 
-  const unPinModal = () => {
-    document.body.style.position = '';
-    document.body.style.top = '';
-  };
+  // const unPinModal = () => {
+  //   document.body.style.position = '';
+  //   document.body.style.top = '';
+  // };
 
   const handleClose = () => {
-    unPinModal();
+    // unPinModal();
 
     if (isConfirmation && handleClickBackdrop) handleClickBackdrop();
     else if (handleCloseModal) handleCloseModal();
@@ -77,7 +77,7 @@ const ActionModal: React.FC<ActionModalProps> = ({
   };
 
   const handleCancelClick = () => {
-    unPinModal();
+    // unPinModal();
 
     if (isConfirmation && handleCancel) handleCancel();
 
@@ -85,7 +85,7 @@ const ActionModal: React.FC<ActionModalProps> = ({
   };
 
   const handleConfirmClick = () => {
-    unPinModal();
+    // unPinModal();
 
     if (isConfirmation && handleConfirm) handleConfirm();
     else if (handleCloseModal) handleCloseModal();
@@ -103,11 +103,11 @@ const ActionModal: React.FC<ActionModalProps> = ({
       setShow(false);
       handleClose();
     }
-    unPinModal();
+    // unPinModal();
   };
 
   useEffect(() => {
-    pinModal();
+    // pinModal();
     // add when mounted
     document.addEventListener('mousedown', handleClick);
     // return function to be called when unmounted

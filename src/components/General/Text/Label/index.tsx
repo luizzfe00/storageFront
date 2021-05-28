@@ -18,6 +18,8 @@ interface Label extends LabelHTMLAttributes<HTMLLabelElement> {
   gap?: number;
   gridArea?: string;
   reverse?: boolean;
+
+  alignChildren?: 'auto' | 'baseline' | 'center' | 'flex-end' | 'flex-start';
   [prop: string]: any;
 }
 
@@ -38,6 +40,7 @@ const LabelComponent: React.FC<Label> = ({
   gap,
   gridArea,
   className,
+  alignChildren,
   ...props
 }: Label) => {
   return !children ? (
@@ -75,6 +78,7 @@ const LabelComponent: React.FC<Label> = ({
       <ChildrenContainer
         childrenHeight={childrenHeight}
         childrenWidth={childrenWidth}
+        alignSelf={alignChildren}
       >
         {children}
       </ChildrenContainer>
