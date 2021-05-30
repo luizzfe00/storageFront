@@ -50,14 +50,15 @@ export interface Product {
   code: string;
   name: string;
   quantity: number;
-  images: Image[];
+  images: any;
   active: boolean;
   value: number;
   sizeType: number;
   sizeOpt: number;
   sizeValue: string;
-  previewer?: string;
+  preview?: string;
   updatedAt?: Date;
+  sexType: number;
 }
 
 export const initialState: Product = {
@@ -66,10 +67,11 @@ export const initialState: Product = {
   name: '',
   quantity: 0,
   active: false,
-  images: [],
+  images: undefined,
   value: 0,
   sizeType: 0,
   sizeOpt: 0,
   sizeValue: 'P',
-  previewer: '',
+  preview: '',
+  sexType: 0,
 };

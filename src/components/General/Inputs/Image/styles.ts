@@ -1,17 +1,6 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { colors } from '../../../../styles/colors';
-
-const dragActive = css`
-  border-color: #78e5d5;
-`;
-
-const dragReject = css`
-  border-color: ${colors.invalidBorder};
-`;
-
 interface DropContainerProps {
-  isDragActive: boolean;
-  isDragReject: boolean;
   disabled?: boolean;
 }
 
@@ -19,84 +8,30 @@ export const DropContainer = styled.div<DropContainerProps>`
   border: 1px dashed
     ${({ disabled }) =>
       disabled ? `${colors.invalidBorder}` : `${colors.lightGray}`};
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
   display: flex;
   flex-direction: column;
+  width: 80%;
 
+  margin-top: 10px;
+
+  justify-content: center;
   align-items: center;
 
   min-height: 70px;
 
   transition: height 0.2s ease;
 
-  ${({ isDragActive }) => isDragActive && dragActive}
-  ${({ isDragReject }) => isDragReject && dragReject}
-
   svg {
-    width: 32px;
-    height: 32px;
+    width: 16px;
+    height: 16px;
   }
 
-  p {
-    margin: 5px 0;
-  }
-`;
-
-interface MessageProps {
-  type?: string;
-}
-
-const messageColors: { [type: string]: string } = {
-  default: '#999',
-  error: colors.invalidBorder,
-  success: '#78e5d5',
-};
-
-export const UploadMessage = styled.p<MessageProps>`
-  display: flex;
-  color: #999;
-  color: ${({ type }) => (type ? messageColors[type] : messageColors.default)};
-`;
-
-export const InfoContainer = styled.ul`
-  margin-top: 20px;
-
-  li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: '#444444';
-
-    & + li {
-      margin-top: 15px;
-    }
-  }
-`;
-
-export const FileInfo = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100%;
-
-  div {
-    display: flex;
-    flex-direction: column;
-
-    span {
-      font-size: 12px;
-      color: '#999999';
-      margin-top: 5px;
-
-      button {
-        border: 0;
-        background: transparent;
-        color: '#e57878';
-        margin-left: 5px;
-        cursor: pointer;
-      }
-    }
+  > span {
+    font-weight: bold;
+    margin-bottom: 4px;
   }
 `;
 
@@ -105,28 +40,45 @@ interface PreviewProps {
 }
 
 export const Preview = styled.div<PreviewProps>`
-  width: 72px;
-  height: 72px;
-  border-radius: 5px;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
   background-image: url(${({ src }) => src});
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 50% 50%;
-  margin-right: 10px;
+  margin-right: 12px;
 `;
 
 export const Container = styled.div`
-  height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
 `;
 
-export const Content = styled.div`
-  width: 100%;
-  max-width: 600px;
-  margin: 10px;
-  background: 4px;
-  border-radius: 4px;
+export const FileUploadContainer = styled.div`
+  width: 80%;
   padding: 10px;
+  display: flex;
+`;
+
+export const FileHeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 6px 0;
+  width: calc(100% - 80px);
+
+  > span {
+    margin-right: 8px;
+    font-weight: bold;
+  }
+`;
+
+export const FileContainer = styled.div`
+  width: 100%;
+`;
+
+export const ErrorMessage = styled.div`
+  color: crimson;
 `;
