@@ -5,8 +5,8 @@ import React, { useState, useEffect } from 'react';
 
 import { toast } from 'react-hot-toast';
 import { icons } from '../../../assets/icons';
-import { Image } from '../../../interfaces/product';
-import { Product, initialState } from '../../../interfaces/product';
+import { Image } from '../../../interfaces/Product';
+import { Product, initialState } from '../../../interfaces/Product';
 
 import api, { getErrorMessage } from '../../../services/api';
 import { colors } from '../../../styles/colors';
@@ -14,11 +14,11 @@ import { removeFormatting } from '../../../utils/formatCurrency';
 import Button from '../../General/Button';
 
 import { onSelectChangeProps } from '../../General/Inputs/definitions';
+import Input from '../../General/Inputs/FormikInput';
 import ImageDropzone from '../../General/Inputs/Image';
-import Input from '../../General/Inputs/Input';
 import MonetaryInput from '../../General/Inputs/Monetary';
 import Option from '../../General/Inputs/Option';
-import Select from '../../General/Inputs/Select';
+import Select from '../../General/Inputs/Select/formikSelect';
 import Switch from '../../General/Inputs/Switch';
 import Text from '../../General/Text';
 
@@ -88,8 +88,50 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
     });
   };
 
+  const handleSubmit = async (values: Product) => {
+    try {
+      const {
+        active,
+        code,
+        sexType,
+        images,
+        name,
+        quantity,
+        sizeOpt,
+        sizeType,
+        sizeValue,
+        value,
+      } = values;
+
+      const body = {
+        name,
+        active,
+        code,
+        sexType: Number(sexType),
+        images: images.map((item: any) => item.url),
+        quantity,
+        sizeOpt: Number(sizeOpt),
+        sizeType: Number(sizeType),
+        sizeValue: sizeValue,
+        value,
+      };
+
+      await api.post('/product', body);
+      toast.success('Sucesso ao criar Produto!');
+      formik.setValues(formik.initialValues);
+    } catch (err) {
+      toast.error('Erro ao criar Produto.');
+      console.log(err);
+    }
+  };
+
   return (
-    <Formik initialValues={formik.initialValues} onSubmit={formik.submitForm}>
+    <Formik
+      initialValues={formik.initialValues}
+      onSubmit={async (values, helpers) => {
+        handleSubmit(values);
+      }}
+    >
       <Form>
         <Container>
           <Text.Label
@@ -104,8 +146,6 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
               name="code"
               placeholder="Código do Produto"
               block
-              value={formik.values.code}
-              onChange={formik.handleChange}
             />
           </Text.Label>
 
@@ -121,8 +161,6 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
               name="name"
               placeholder="Nome do Produto"
               block
-              value={formik.values.name}
-              onChange={formik.handleChange}
             />
           </Text.Label>
 
@@ -139,19 +177,11 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
               placeholder="0"
               min={0}
               block
-              value={formik.values.quantity}
-              onChange={formik.handleChange}
             />
           </Text.Label>
 
           <Text.Label text="Valor" gridArea="value" fontWeight="bold" block>
-            <MonetaryInput
-              block
-              name="value"
-              type="number"
-              value={formik.values.value}
-              onChange={formik.handleChange}
-            />
+            <MonetaryInput block name="value" type="number" />
           </Text.Label>
 
           <Text.Label text="Ativo" gridArea="active" fontWeight="bold" block>
@@ -170,7 +200,7 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
           <SizeContainer>
             <Text.Label text="Tamanho da peça" fontWeight="bold">
               <Select
-                name="sizeType"
+                fieldName="sizeType"
                 value={formik.values.sizeType}
                 onChange={handleSelect}
               >
@@ -184,7 +214,7 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
 
             <Text.Label text="Opções de tamanho" fontWeight="bold">
               <Select
-                name="sizeOpt"
+                fieldName="sizeOpt"
                 value={formik.values.sizeOpt}
                 onChange={handleSelect}
               >
@@ -198,7 +228,7 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
 
             <Text.Label text="Tamanho" fontWeight="bold">
               <Select
-                name="sizeValue"
+                fieldName="sizeValue"
                 value={formik.values.sizeValue}
                 onChange={handleSelect}
               >
@@ -218,7 +248,7 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
 
             <Text.Label text="Sexo" fontWeight="bold">
               <Select
-                name="sexType"
+                fieldName="sexType"
                 value={formik.values.sexType}
                 onChange={handleSelect}
               >
@@ -242,11 +272,11 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
             <ImageDropzone
               text="Selecione as imagens do Produto"
               name="images"
-              disabled={formik.values.images?.length >= 3}
+              disabled={formik.values.images?.length >= 4}
             />
           </Text.Label>
 
-          {/* <Button
+          <Button
             text="Salvar Produto"
             type="submit"
             paddingRightLeft={21}
@@ -254,7 +284,7 @@ const ProductForm: React.FC<ProductFormProp> = ({ product }) => {
             textSize={16}
             backgroundColor={colors.confirmButton}
             color={colors.lightTextButton}
-          /> */}
+          />
         </Container>
       </Form>
     </Formik>

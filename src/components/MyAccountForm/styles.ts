@@ -48,7 +48,7 @@ export const FlexContainer = styled.div<FlexContaierProps>`
 
 export const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   padding: 10px;
 `;
 
@@ -70,4 +70,13 @@ export const AddressContainer = styled.div`
 export const RadioGroup = styled.div`
   display: flex;
   align-items: center;
+`;
+
+export const FormHeader = styled.div`
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 32px;
+  padding: 10px 0 20px 0;
 `;

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { icons } from '../../../assets/icons';
 
 import { Mutate } from '../../../interfaces';
-import { Product } from '../../../interfaces/product';
+import { Product } from '../../../interfaces/Product';
 import { colors } from '../../../styles/colors';
 import { formatCurrency } from '../../../utils/formatCurrency';
 
@@ -28,10 +29,16 @@ const OrderRow: React.FC<ProductRow> = ({
   mutate,
   setLoading,
 }: ProductRow) => {
+  const history = useHistory();
+
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleDropdown = () => setShowDropdown((prev) => !prev);
   const handleCloseDropdown = () => setShowDropdown(false);
+
+  const handleDetails = () => {
+    history.push(`/product/${product.id}`);
+  };
 
   return product ? (
     <>
@@ -69,7 +76,7 @@ const OrderRow: React.FC<ProductRow> = ({
               />
             }
           >
-            <Dropdown.DropdownItem onClick={() => {}}>
+            <Dropdown.DropdownItem onClick={handleDetails}>
               {icons.listMenu} Ver detalhes
             </Dropdown.DropdownItem>
             <Dropdown.DropdownItem onClick={() => {}}>

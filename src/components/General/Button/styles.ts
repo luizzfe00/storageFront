@@ -121,12 +121,17 @@ export const Loader = styled.div<Loading>`
   opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
 `;
 
-export const ButtonChildren = styled.div<Loading>`
+interface ButtonChildrenProps extends Loading {
+  justifyContent?: string;
+}
+
+export const ButtonChildren = styled.div<ButtonChildrenProps>`
   margin: 0 !important;
   display: flex;
   flex-direction: row;
   align-items: center;
   opacity: ${({ isLoading }) => (isLoading ? 0 : 1)};
+  justify-content: ${({ justifyContent }) => justifyContent || 'unset'};
 `;
 
 interface StylelessContainer {

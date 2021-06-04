@@ -3,3 +3,4 @@ export { default as Auth } from './Auth';
 export { default as MyAccount } from './MyAccount';
 export { default as Product } from './Product';
 export { default as Orders } from './Orders';
+export { default as ProductDetails } from './ProductDetails';

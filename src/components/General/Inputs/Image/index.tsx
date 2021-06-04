@@ -1,4 +1,4 @@
-import { useField } from 'formik';
+import { useField, connect } from 'formik';
 import React, { useState, useCallback, useEffect } from 'react';
 
 import {
@@ -95,4 +95,4 @@ const ImageDropzone: React.FC<Props> = ({ disabled, text, name }) => {
   );
 };
 
-export default ImageDropzone;
+export default connect(ImageDropzone);

@@ -221,6 +221,7 @@ const ComboBoxInput: React.FC<ComboBoxInputProps> = ({
   return (
     <Debounce
       block
+      name="debounce"
       type="search"
       borderRadius={borderRadius}
       debounceTimeout={debounce ? 600 : 0}

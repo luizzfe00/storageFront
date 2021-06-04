@@ -23,7 +23,8 @@ interface ISocial {
 }
 
 interface IAccountDocument {
-  documentType: number;
+  documentType: boolean;
+  generalRegister?: string;
   documentNumber: string;
   issuer: string;
   issueDate: string;
@@ -32,7 +33,7 @@ interface IAccountDocument {
 
 interface IAddress {
   street: string;
-  number: number | null;
+  houseNumber: number | undefined;
   complement?: string;
   neighborhood: string;
   zipCode: string;

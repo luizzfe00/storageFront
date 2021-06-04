@@ -35,12 +35,21 @@ export const privateRouteList: RouteProps[] = [
     navbar: true,
   },
   {
-    path: '/product/:id?',
+    path: '/product',
     component: pages.Product,
     exact: true,
     icon: icons.plus,
     title: 'Criar Produto',
     navbar: true,
+    id: true,
+  },
+  {
+    path: '/product/:id?',
+    component: pages.ProductDetails,
+    exact: true,
+    icon: icons.chevron,
+    title: 'Detalhes do Produto',
+    navbar: false,
     id: true,
   },
   // {

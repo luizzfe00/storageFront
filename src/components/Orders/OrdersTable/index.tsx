@@ -80,7 +80,7 @@ const OrdersTable: React.FC<OrdersTable> = ({
         </span>
         <ButtonsContainer>
           {showSearch ? (
-            <Input prepend prependedColor={colors.link}>
+            <Input name="search" prepend prependedColor={colors.link}>
               {icons.search}
             </Input>
           ) : (

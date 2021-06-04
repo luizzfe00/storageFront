@@ -7,6 +7,7 @@ interface Container {
   block?: boolean;
   largestOption: number;
   areaName?: string;
+  isOpen?: boolean;
 }
 
 export const Container = styled.div<Container>`
@@ -153,13 +154,11 @@ export const StyledSelect = styled.select<SelectContainer>`
 
   width: 100%;
 
-  padding: ${({ paddingUpDown, paddingRightLeft }) =>
-    `${paddingUpDown ?? 12}px ${paddingRightLeft ?? 18}px`};
+  padding: 12px 18px;
 
-  border-radius: 10px 10px ${({ isOpen }) => (isOpen ? '0 0' : '')};
+  border-radius: 10px 10px;
 
-  background-color: ${({ disabled }) =>
-    disabled ? colors.primaryShadow : colors.background};
+  background-color: ${colors.background};
 
   font-size: 16px;
   outline: none !important;
@@ -169,26 +168,18 @@ export const StyledSelect = styled.select<SelectContainer>`
     transition: transform 100ms ease-in-out;
     margin-left: 12px;
 
-    transform: rotate(${({ isOpen }) => (isOpen ? '-180' : '0')}deg);
+    // transform: rotate(${({ isOpen }) => (isOpen ? '-180' : '0')}deg);
   }
 
   &,
   ${StyledOption} {
-    border: 1.7px solid
-      ${({ isValid }) => (isValid ? 'transparent' : colors.invalidBorder)};
-  }
-
-  &,
-  ${StyledOption} {
-    font-weight: ${({ bold }) => (bold ? 'bold' : 'normal')};
+    border: 1.7px solid ${colors.grayBorder};
+    font-weight: bold;
+    /* ${({ isValid }) => (isValid ? 'transparent' : colors.invalidBorder)}; */
   }
 
   &:hover,
   &:focus {
-    box-shadow: ${({ disabled, isValid }) =>
-      disabled
-        ? 'none'
-        : `0 0 0 4px
-        ${isValid ? colors.primaryShadow : `${colors.invalidBorder}33`}`};
+    box-shadow: ${colors.primaryShadow};
   }
 `;
