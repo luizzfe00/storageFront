@@ -50,6 +50,20 @@ interface Button extends ButtonHTMLAttributes<HTMLButtonElement> {
   loaderSize?: number;
   areaName?: string;
   styless?: boolean;
+  justifyContent?:
+    | 'center'
+    | 'end'
+    | 'flex-end'
+    | 'flex-start'
+    | 'left'
+    | 'normal'
+    | 'revert'
+    | 'right'
+    | 'space-around'
+    | 'space-between'
+    | 'space-evenly'
+    | 'start'
+    | 'stretch';
   [props: string]: any;
 }
 
@@ -83,6 +97,7 @@ const Button: React.FC<Button> = ({
   isLoading = false,
   loaderSize = 15,
   areaName,
+  justifyContent,
   ...props
 }: Button) => {
   const history = useHistory();
@@ -131,7 +146,11 @@ const Button: React.FC<Button> = ({
         </Loader>
       ) : null}
 
-      <ButtonChildren className="centered" isLoading={isLoading}>
+      <ButtonChildren
+        className="centered"
+        isLoading={isLoading}
+        justifyContent={justifyContent}
+      >
         {icon}
         {text}
         {children || null}

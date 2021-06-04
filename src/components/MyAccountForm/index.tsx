@@ -1,18 +1,13 @@
-import {
-  Field,
-  Form,
-  Formik,
-  FormikConfig,
-  FormikValues,
-  useFormik,
-} from 'formik';
+import { Form, Formik, FormikConfig, FormikValues, useFormik } from 'formik';
 import React, { useState } from 'react';
-import { mixed, number, object } from 'yup';
+import { object, string, date } from 'yup';
 
 import Button from '../General/Button';
-import Input from '../General/Inputs/Input';
+import Input from '../General/Inputs/FormikInput';
 import Switch from '../General/Inputs/Switch';
 import Text from '../General/Text';
+
+import DocumentInfo from './DocumentInfo';
 
 import {
   Container,
@@ -21,7 +16,7 @@ import {
   FlexContainer,
   ButtonContainer,
   AddressContainer,
-  GridContainer,
+  FormHeader,
 } from './styles';
 
 const MyAccountForm: React.FC = () => {
@@ -38,12 +33,20 @@ const MyAccountForm: React.FC = () => {
         facebook: '',
         website: '',
       },
+      bank: {
+        number: undefined,
+        agency: undefined,
+        account: undefined,
+      },
       document: {
         documentType: false,
         generalRegister: '',
         documentNumber: '',
         issuer: '',
         issueDate: '',
+        corporateName: '',
+        fantasyName: '',
+        openingDate: '',
       },
       address: {
         street: '',
@@ -75,92 +78,96 @@ const MyAccountForm: React.FC = () => {
     });
   };
 
-  const renderPFContent = (
-    <>
-      <Text.Label text="RG" fontWeight="bold">
-        <Input
-          name="document.generalRegister"
-          value={formik.values.document.generalRegister}
-          onChange={formik.handleChange}
-        />
-      </Text.Label>
-      <Text.Label text="CPF" fontWeight="bold">
-        <Input
-          name="document.documentNumber"
-          value={formik.values.document.documentNumber}
-          onChange={formik.handleChange}
-        />
-      </Text.Label>
-    </>
-  );
+  const personalValidation = object().shape({
+    name: string()
+      .min(2, 'Nome inválido!')
+      .required('É preciso informar um nome.'),
+    businessName: string()
+      .min(2, 'Nome inválido!')
+      .required('É preciso informar o nome da loja.'),
+    email: string()
+      .email('E-mail inválido!')
+      .required('É preciso informar um e-mail.'),
+    birthDate: date().required('É preciso informar uma data de nascimento.'),
+    phoneNumber: string()
+      .length(11, 'Informe um número válido')
+      .required('É preciso informar um número de telefone.'),
+  });
+
+  const documentAndBankValidation = object().shape({
+    document: object({
+      generalRegister: string().when('documentType', {
+        is: false,
+        then: string().required('É preciso informar o RG.'),
+      }),
+      documentNumber: string().required('É preciso informar o CPF.'),
+      issuer: string().when('documentType', {
+        is: false,
+        then: string().required('É preciso informar o Órgão Expeditor.'),
+      }),
+      issueDate: string().when('documentType', {
+        is: false,
+        then: string().required('É preciso informar a Data de Expedição.'),
+      }),
+      corporateName: string().when('documentType', {
+        is: true,
+        then: string().required('É preciso informar a Razão Social.'),
+      }),
+      fantasyName: string().when('documentType', {
+        is: true,
+        then: string().required('É preciso informar o Nome Fantasia.'),
+      }),
+      openingDate: string().when('documentType', {
+        is: true,
+        then: string().required('É preciso informar a Data de Abertura.'),
+      }),
+    }),
+  });
 
   return (
     <Container>
       <FormStepper
-        initialValues={{
-          firstName: '',
-          lastName: '',
-          millionaire: false,
-          money: 0,
-          description: '',
-        }}
+        initialValues={formik.initialValues}
         onSubmit={async (values: any) => {
           console.log('values', values);
         }}
       >
-        <FormStep label="Personal Data">
+        <FormStep label="Dados Pessoais" validationSchema={personalValidation}>
           <FirstContent>
             <Text.Label text="Nome" fontWeight="bold" block>
-              <Input
-                name="name"
-                onChange={formik.handleChange}
-                value={formik.values.name}
-                block
-              />
+              <Input name="name" block />
             </Text.Label>
-
             <Text.Label text="Nome da Loja" fontWeight="bold" block>
-              <Input
-                name="businessName"
-                onChange={formik.handleChange}
-                value={formik.values.businessName}
-                block
-              />
+              <Input name="businessName" block />
             </Text.Label>
 
             <Text.Label text="E-mail" fontWeight="bold" block>
-              <Input
-                name="email"
-                onChange={formik.handleChange}
-                value={formik.values.email}
-                block
-              />
+              <Input name="email" block />
             </Text.Label>
 
             <FlexContainer>
-              <Text.Label text="Data de Nascimento" fontWeight="bold">
+              <Text.Label text="Data de Nascimento" fontWeight="bold" block>
                 <Input
+                  block
                   name="birthDate"
-                  onChange={formik.handleChange}
-                  value={formik.values.birthDate}
                   placeholder={new Date().toLocaleDateString()}
+                  type="date"
                 />
               </Text.Label>
 
-              <Text.Label text="Telefone" fontWeight="bold">
+              <Text.Label text="Telefone" fontWeight="bold" block>
                 <Input
+                  block
                   name="phoneNumber"
                   onChange={formik.handleChange}
-                  value={formik.values.phoneNumber}
-                  placeholder="(00) 0 0000-0000"
+                  placeholder="(00) 00000-0000"
                 />
               </Text.Label>
 
-              <Text.Label text="Loja Virtual" fontWeight="bold">
+              <Text.Label text="Loja Virtual" fontWeight="bold" block>
                 <Switch
                   name="isOnline"
-                  value={formik.values.isOnline}
-                  onChange={handleSwitchisOnline}
+                  onChange={(name, value) => console.log(name, value)}
                   leftText="Não"
                   rightText="Sim"
                   height={32}
@@ -179,7 +186,6 @@ const MyAccountForm: React.FC = () => {
                 block
                 name="social.instagram"
                 onChange={formik.handleChange}
-                value={formik.values.social.instagram}
               />
             </Text.Label>
 
@@ -188,7 +194,6 @@ const MyAccountForm: React.FC = () => {
                 block
                 name="social.facebook"
                 onChange={formik.handleChange}
-                value={formik.values.social.facebook}
               />
             </Text.Label>
 
@@ -197,7 +202,6 @@ const MyAccountForm: React.FC = () => {
                 block
                 name="social.website"
                 onChange={formik.handleChange}
-                value={formik.values.social.website}
               />
             </Text.Label>
           </FlexContainer>
@@ -205,7 +209,10 @@ const MyAccountForm: React.FC = () => {
           <Hr />
         </FormStep>
 
-        <FormStep label="Document Info">
+        <FormStep
+          label="Documentos e Dados Bancários"
+          validationSchema={documentAndBankValidation}
+        >
           <FlexContainer>
             <Text.Label
               text="Tipo de Conta"
@@ -219,7 +226,7 @@ const MyAccountForm: React.FC = () => {
                 rightText="PJ"
                 name="document.documentType"
                 value={formik.values.document.documentType}
-                onChange={handleSwitchDocument}
+                onChange={(name, value) => formik.setFieldValue(name, value)}
                 height={32}
                 width={48}
                 fontSize={14}
@@ -227,57 +234,12 @@ const MyAccountForm: React.FC = () => {
             </Text.Label>
           </FlexContainer>
 
-          {!formik.values.document.documentType ? (
-            <GridContainer>
-              <Text.Label text="RG" fontWeight="bold" block>
-                <Input
-                  block
-                  name="document.generalRegister"
-                  value={formik.values.document.generalRegister}
-                  onChange={formik.handleChange}
-                />
-              </Text.Label>
-              <Text.Label text="Órgão Expeditor" fontWeight="bold" block>
-                <Input
-                  block
-                  name="document.issuer"
-                  value={formik.values.document.issuer}
-                  onChange={formik.handleChange}
-                />
-              </Text.Label>
-              <Text.Label text="Data de Expedição" fontWeight="bold" block>
-                <Input
-                  block
-                  name="document.issueDate"
-                  value={formik.values.document.issueDate}
-                  onChange={formik.handleChange}
-                />
-              </Text.Label>
-              <Text.Label text="CPF" fontWeight="bold" block>
-                <Input
-                  block
-                  name="document.documentNumber"
-                  value={formik.values.document.documentNumber}
-                  onChange={formik.handleChange}
-                />
-              </Text.Label>
-            </GridContainer>
-          ) : (
-            <GridContainer>
-              <Text.Label text="CNPJ" fontWeight="bold" block>
-                <Input
-                  block
-                  name="document.documentNumber"
-                  value={formik.values.document.documentNumber}
-                  onChange={formik.handleChange}
-                />
-              </Text.Label>
-            </GridContainer>
-          )}
+          <DocumentInfo renderPJ={formik.values.document.documentType} />
+
           <Hr />
         </FormStep>
 
-        <FormStep label="Address Info">
+        <FormStep label="Endereço">
           <AddressContainer>
             <Text.Label
               text="Endereço"
@@ -285,12 +247,13 @@ const MyAccountForm: React.FC = () => {
               gridArea="street"
               block
             >
-              <Input
-                block
-                name="address.street"
-                onChange={formik.handleChange}
-                value={formik.values.address.street}
-              />
+              <Input block name="address.street" />
+            </Text.Label>
+            <Text.Label text="Número" fontWeight="bold" gridArea="num" block>
+              <Input block name="address.number" />
+            </Text.Label>
+            <Text.Label text="Bairro" fontWeight="bold" gridArea="neigh" block>
+              <Input block name="address.neighborhood" />
             </Text.Label>
             <Text.Label
               text="Complemento"
@@ -298,52 +261,17 @@ const MyAccountForm: React.FC = () => {
               gridArea="comp"
               block
             >
-              <Input
-                block
-                name="address.complement"
-                onChange={formik.handleChange}
-                value={formik.values.address.complement}
-              />
+              <Input block name="address.complement" />
             </Text.Label>
-            <Text.Label text="Número" fontWeight="bold" gridArea="num" block>
-              <Input
-                block
-                name="address.number"
-                onChange={formik.handleChange}
-                value={formik.values.address.houseNumber}
-              />
-            </Text.Label>
-            <Text.Label text="Bairro" fontWeight="bold" gridArea="neigh" block>
-              <Input
-                block
-                name="address.neighborhood"
-                onChange={formik.handleChange}
-                value={formik.values.address.neighborhood}
-              />
-            </Text.Label>
+
             <Text.Label text="CEP" fontWeight="bold" gridArea="zip" block>
-              <Input
-                block
-                name="address.zipCode"
-                onChange={formik.handleChange}
-                value={formik.values.address.zipCode}
-              />
+              <Input block name="address.zipCode" />
             </Text.Label>
             <Text.Label text="Cidade" fontWeight="bold" gridArea="city" block>
-              <Input
-                block
-                name="address.city"
-                onChange={formik.handleChange}
-                value={formik.values.address.city}
-              />
+              <Input block name="address.city" />
             </Text.Label>
             <Text.Label text="Estado" fontWeight="bold" gridArea="state" block>
-              <Input
-                block
-                name="address.state"
-                onChange={formik.handleChange}
-                value={formik.values.address.state}
-              />
+              <Input block name="address.state" />
             </Text.Label>
           </AddressContainer>
           <Hr />
@@ -387,49 +315,40 @@ export const FormStepper = ({
           setCompleted(true);
         } else {
           setStep((s) => s + 1);
-
-          // the next line was not covered in the youtube video
-          //
-          // If you have multiple fields on the same step
-          // we will see they show the validation error all at the same time after the first step!
-          //
-          // If you want to keep that behaviour, then, comment the next line :)
-          // If you want the second/third/fourth/etc steps with the same behaviour
-          //    as the first step regarding validation errors, then the next line is for you! =)
-          //
-          // In the example of the video, it doesn't make any difference, because we only
-          //    have one field with validation in the second step :)
           helpers.setTouched({});
         }
       }}
     >
-      {({ isSubmitting }) => (
-        <Form autoComplete="off">
-          {currentChild}
-          <ButtonContainer>
-            {step > 0 ? (
+      {({ isSubmitting }) => {
+        return (
+          <Form autoComplete="off">
+            <FormHeader>{currentChild.props.label}</FormHeader>
+            {currentChild}
+            <ButtonContainer>
+              {step > 0 ? (
+                <Button
+                  disabled={isSubmitting}
+                  text="Voltar"
+                  onClick={() => setStep((prev) => prev - 1)}
+                  paddingRightLeft={24}
+                  paddingUpDown={8}
+                  fontWeight="bold"
+                  textSize={30}
+                />
+              ) : null}
               <Button
                 disabled={isSubmitting}
-                text="Voltar"
-                onClick={() => setStep((prev) => prev - 1)}
+                text={isLastStep() ? 'Concluir' : 'Avançar'}
+                type="submit"
                 paddingRightLeft={24}
                 paddingUpDown={8}
                 fontWeight="bold"
                 textSize={30}
-              />
-            ) : null}
-            <Button
-              disabled={isSubmitting}
-              text={isLastStep() ? 'Concluir' : 'Avançar'}
-              type="submit"
-              paddingRightLeft={24}
-              paddingUpDown={8}
-              fontWeight="bold"
-              textSize={30}
-            ></Button>
-          </ButtonContainer>
-        </Form>
-      )}
+              ></Button>
+            </ButtonContainer>
+          </Form>
+        );
+      }}
     </Formik>
   );
 };

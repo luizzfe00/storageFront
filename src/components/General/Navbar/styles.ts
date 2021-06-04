@@ -31,7 +31,7 @@ export const NavLogo = styled.li`
   margin-top: 24px;
 
   ${RouteText} {
-    color: ${colors.black};
+    color: ${colors.white};
   }
 
   svg {
@@ -49,7 +49,7 @@ export const NavItem = styled.li`
   white-space: nowrap;
 
   &:hover > * {
-    color: ${colors.black};
+    color: ${colors.white};
   }
 
   &:last-child {
@@ -67,13 +67,13 @@ export const NavItem = styled.li`
 
 export const Nav = styled.nav`
   position: fixed;
-  background-color: ${colors.white};
+  background: linear-gradient(#0072ff, #00c6ff);
   color: ${colors.nonSelectedNavbarSVG};
   transition: width 600ms ease;
   z-index: 101;
   overflow-x: hidden;
   overflow-y: auto;
-  box-shadow: 2px 0 rgba(0, 0, 0, 0.2);
+  /* box-shadow: 2px 0 rgba(0, 0, 0, 0.2); */
 
   ${StyledScrollY}
 
@@ -117,7 +117,7 @@ const ItemStyle = `
   height: 5rem;
   width: -webkit-fill-available;
 
-  color: ${colors.blurredText};
+  color: ${colors.white};
   text-decoration: none;
 
   &,

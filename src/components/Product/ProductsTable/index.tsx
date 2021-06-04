@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { icons } from '../../../assets/icons';
-import { Product } from '../../../interfaces/product';
+import { Product } from '../../../interfaces/Product';
 import { colors } from '../../../styles/colors';
 import Button from '../../General/Button';
 import Input from '../../General/Inputs/Input';
@@ -89,7 +89,7 @@ const ProductsTable: React.FC<ProductsTable> = ({
         </span>
         <ButtonsContainer>
           {showSearch ? (
-            <Input prepend prependedColor={colors.link}>
+            <Input name="search" prepend prependedColor={colors.link}>
               {icons.search}
             </Input>
           ) : (

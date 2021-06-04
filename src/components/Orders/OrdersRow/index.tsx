@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { icons } from '../../../assets/icons';
 
-import { Product } from '../../../interfaces/product';
+import { Product } from '../../../interfaces/Product';
 import { colors } from '../../../styles/colors';
 import { formatCurrency } from '../../../utils/formatCurrency';
 

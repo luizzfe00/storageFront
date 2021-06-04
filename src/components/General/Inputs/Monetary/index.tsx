@@ -1,7 +1,9 @@
+import { connect } from 'formik';
 import React from 'react';
+
 import UtilsFunctions from '../../../../utils';
 
-import Input, { InputInterface } from '../Input';
+import Input, { InputInterface } from '../FormikInput';
 
 import { Prepend } from './styles';
 

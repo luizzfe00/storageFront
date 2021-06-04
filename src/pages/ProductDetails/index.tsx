@@ -1,29 +1,29 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import BasePage from '../../components/General/BasePage';
-import ProductForm from '../../components/Product/ProductForm';
+import ProductDetails from '../../components/Product/ProductDetails';
 import { useSWRHook } from '../../services';
 
 interface Params {
-  id?: string;
+  id: string;
 }
 
 const Product: React.FC = () => {
   const { id } = useParams<Params>();
 
-  const { data } = useSWRHook(id ? [`/product/${id}`, null] : null);
+  const { data } = useSWRHook([`/product/${id}`, null]);
 
   return (
     <BasePage
-      title="Criar Produto"
+      title="Detalhes do Produto"
       caretPath={[
         {
-          title: 'Novo Produto',
-          path: '/product',
+          title: 'Detalhes do Produto',
+          path: '/product/:id',
         },
       ]}
     >
-      <ProductForm product={data} />
+      <ProductDetails data={data?.product} />
     </BasePage>
   );
 };

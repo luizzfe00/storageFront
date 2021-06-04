@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 
+import CompleteRegister from '../components/CompleteRegister';
 import Navbar from '../components/General/Navbar';
 import PrivateRoute from '../components/General/PrivateRoute';
 import PublicRoute from '../components/General/PublicRoute';
@@ -19,6 +20,7 @@ const Routes: React.FC = () => {
     <BrowserRouter>
       {auth ? (
         <>
+          <CompleteRegister />
           <Navbar />
           <Switch>
             {privateRouteList.map((routeProps: RouteProps) => (
